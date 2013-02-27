@@ -4,15 +4,10 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
         >
-    <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Hello World, StartActivity"
-            />
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/login" android:layout_gravity="center_horizontal" android:minWidth="200dp"/>
+            android:id="@+id/login" android:layout_gravity="center" android:minWidth="200dp"/>
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,7 +21,11 @@
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ReadTable"
+            android:text="Refresh"
             android:id="@+id/readButton" android:layout_gravity="center"/>
+    <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:id="@+id/listView"/>
 </LinearLayout>
 
