@@ -4,25 +4,28 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
         >
-    <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/login" android:layout_gravity="center" android:minWidth="200dp"/>
-    <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/passw" android:layout_gravity="center_horizontal" android:minWidth="200dp"
-            />
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save :3"
-            android:id="@+id/saveButton" android:layout_gravity="center_horizontal"/>
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Refresh"
-            android:id="@+id/readButton" android:layout_gravity="center"/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/login" android:layout_gravity="center" android:minWidth="200dp"
+                android:inputType="numberDecimal"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save :3"
+                android:id="@+id/saveButton" android:layout_gravity="center_horizontal"
+                android:layout_alignParentLeft="false" android:layout_alignParentBottom="false"
+                android:layout_alignParentRight="false"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Refresh"
+                android:id="@+id/readButton" android:layout_gravity="center"/>
+    </LinearLayout>
     <ListView
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"

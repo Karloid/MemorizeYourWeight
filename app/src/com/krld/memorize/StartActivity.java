@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,14 +16,14 @@ import com.krld.memorize.common.ListAdapter;
 import com.krld.memorize.model.Measurement;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class StartActivity extends Activity {
-    EditText loginEditText = null;
-    EditText passEditText = null;
+    EditText weightText = null;
     Button saveButton = null;
     Button readButton = null;
-    DbOpenHelper dbHelper = null;
+    public static DbOpenHelper dbHelper = null;
 
     /**
      * Called when the activity is first created.
@@ -32,8 +33,7 @@ public class StartActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         dbHelper = new DbOpenHelper(StartActivity.this, DbOpenHelper.DB_NAME, null, DbOpenHelper.DB_VERSION);
-        loginEditText = (EditText) findViewById(R.id.login);
-        passEditText = (EditText) findViewById(R.id.passw);
+        weightText = (EditText) findViewById(R.id.login);
         saveButton = (Button) findViewById(R.id.saveButton);
         readButton = (Button) findViewById(R.id.readButton);
 
@@ -42,12 +42,19 @@ public class StartActivity extends Activity {
             public void onClick(View view) {
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 ContentValues cv = new ContentValues();
-                cv.put(DbOpenHelper.LOGIN, loginEditText.getText().toString());
-                cv.put(DbOpenHelper.PASSW, passEditText.getText().toString());
-                db.insert(DbOpenHelper.TABLE_NAME, null, cv);
+                try {
+                    cv.put(DbOpenHelper.WEIGHT, Double.parseDouble(weightText.getText().toString().replaceAll(",", ".")));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(StartActivity.this, "Not a number", Toast.LENGTH_SHORT).show();
+                    weightText.setText("");
+                    return;
+                }
+                cv.put(DbOpenHelper.DATE, (int) (Calendar.getInstance().getTimeInMillis() / 1000));
+                Log.d("KRLD", (int) (Calendar.getInstance().getTimeInMillis() / 1000) + "");
+                db.insert(DbOpenHelper.MEASUREMENT, null, cv);
                 db.close();
-                loginEditText.setText("");
-                passEditText.setText("");
+                weightText.setText("");
                 Toast.makeText(StartActivity.this, "Inserting!", Toast.LENGTH_SHORT).show();
                 refreshListViewMeasurement();
             }
@@ -60,20 +67,24 @@ public class StartActivity extends Activity {
         });
 
         refreshListViewMeasurement();
-
     }
 
-    private void refreshListViewMeasurement() {
+    public void refreshListViewMeasurement() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select " + DbOpenHelper.LOGIN + ", " + DbOpenHelper.PASSW +" from " + DbOpenHelper.TABLE_NAME, null);
+        Cursor cursor = db.rawQuery("select _id, " + DbOpenHelper.WEIGHT + ", " + DbOpenHelper.DATE +
+                " from " + DbOpenHelper.MEASUREMENT + " order by " + DbOpenHelper.DATE + " desc", null);
         List<Measurement> measurementList = new ArrayList<Measurement>();
         while (cursor.moveToNext()) {
-            measurementList.add(new Measurement(cursor.getString(0) + " / " + cursor.getString(1)));
+            measurementList.add(new Measurement(cursor.getInt(0), cursor.getString(1), cursor.getInt(2)));
         }
         cursor.close();
 
         ListView listView = (ListView) findViewById(R.id.listView);
-        ListAdapter listAdapter = new ListAdapter(StartActivity.this, R.layout.tablerow, measurementList );
+        ListAdapter listAdapter = new ListAdapter(StartActivity.this, R.layout.tablerow, measurementList);
         listView.setAdapter(listAdapter);
+    }
+
+    private void finishInput() {
+        // TODO hide keyboard
     }
 }
