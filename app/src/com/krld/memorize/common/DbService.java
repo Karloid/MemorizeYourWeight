@@ -8,5 +8,6 @@ public class DbService {
         DbOpenHelper dbHelper = StartActivity.dbHelper;
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.execSQL("delete from " + DbOpenHelper.MEASUREMENT + " where _id = " + id);
+        db.close();
     }
 }

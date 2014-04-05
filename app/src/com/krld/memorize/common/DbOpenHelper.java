@@ -11,7 +11,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     public static final String MEASUREMENT = "measurement";
     public static final String WEIGHT = "weight";
     public static final String DATE = "date";
-   // public static final String LOGIN = "login";
+    // public static final String LOGIN = "login";
     //public static final String PASSW = "passw";
     public static final String CREATE_TABLE = "create table " + MEASUREMENT + " ( _id integer primary key autoincrement, "
             + WEIGHT + " REAL, " + DATE + " INTEGER)";
@@ -22,7 +22,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-         sqLiteDatabase.execSQL(CREATE_TABLE);
+        sqLiteDatabase.execSQL(CREATE_TABLE);
     }
 
     @Override
