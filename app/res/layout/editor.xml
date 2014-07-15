@@ -16,15 +16,15 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Save :3"
-                android:id="@+id/saveButton" android:layout_gravity="center_horizontal"
+                android:text="Save"
+                android:id="@+id/saveButton" android:layout_gravity="center_horizontal|right"
                 android:layout_alignParentLeft="false" android:layout_alignParentBottom="false"
                 android:layout_alignParentRight="false"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Refresh"
-                android:id="@+id/readButton" android:layout_gravity="center"/>
+                android:id="@+id/readButton" android:visibility="invisible"/>
     </LinearLayout>
     <ListView
             android:layout_width="wrap_content"

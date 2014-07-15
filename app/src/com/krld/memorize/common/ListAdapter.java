@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import com.krld.memorize.EditorActivity;
 import com.krld.memorize.R;
-import com.krld.memorize.StartActivity;
 import com.krld.memorize.model.Measurement;
 
 import java.text.SimpleDateFormat;
@@ -25,7 +25,7 @@ public class ListAdapter extends ArrayAdapter<Measurement> {
 
     public ListAdapter(Context context, int textViewResourceId, List<Measurement> items) {
         super(context, textViewResourceId, items);
-        Log.e("KRLD", " create listAdapter " + items.size());
+        Log.d("KRLD", " create listAdapter " + items.size());
         this.items = items;
     }
 
@@ -38,7 +38,7 @@ public class ListAdapter extends ArrayAdapter<Measurement> {
             v = vi.inflate(R.layout.tablerow, null);
         }
         Measurement measurement = items.get(position);
-        Log.d("KRLD", measurement.getWeight().toString() + " pos: " + position);
+      //  Log.d("KRLD", measurement.getWeight().toString() + " pos: " + position);
 
         if (measurement != null) {
             TextView weightView = (TextView) v.findViewById(R.id.textViewWeight);
@@ -55,7 +55,7 @@ public class ListAdapter extends ArrayAdapter<Measurement> {
                 @Override
                 public void onClick(View view) {
                     DbService.removeMeasurement((Integer) view.getTag());
-                    ((StartActivity) ListAdapter.this.getContext()).refreshListViewMeasurement();
+                    ((EditorActivity) ListAdapter.this.getContext()).refreshListViewMeasurement();
                 }
             });
         }
