@@ -32,9 +32,8 @@ public class DbOpenHelper extends SQLiteOpenHelper {
         if (oldVersion == 2 && newVersion == 3) {
             sqLiteDatabase.execSQL("ALTER TABLE " + MEASUREMENT + " ADD COLUMN " + TYPE + " TEXT");
         }
-        if (oldVersion == 3 && newVersion == 4) {
-        }
-        if (oldVersion == 4 && newVersion == 5) {
+        if (oldVersion != newVersion && newVersion == 5) {
+            sqLiteDatabase.execSQL("ALTER TABLE " + MEASUREMENT + " ADD COLUMN " + TYPE + " TEXT");
             sqLiteDatabase.execSQL("update " + MEASUREMENT + " set " + TYPE + " = '" + DataType.WEIGHT + "' ");
         }
     }
