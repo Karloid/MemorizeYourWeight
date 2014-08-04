@@ -2,11 +2,14 @@ package com.krld.memorize;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
@@ -25,10 +28,33 @@ public class EditorActivity extends Activity {
     Button readButton = null;
     public static DbOpenHelper dbHelper = null;
     private DataType datatype;
+    private Intent shareIntent;
 
-    /**
-     * Called when the activity is first created.
-     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.editormenu, menu);
+        MenuItem item = menu.findItem(R.id.share_button);
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                updateShareIntent();
+                startActivity(Intent.createChooser(shareIntent, "Share"));
+                return true;
+            }
+        });
+        updateShareIntent();
+        return true;
+    }
+
+    private void updateShareIntent() {
+        shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.setType("application/vnd.ms-excel");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "test");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "subject");
+        //shareActionProvider.setShareIntent(shareIntent);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +83,8 @@ public class EditorActivity extends Activity {
         inputText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_NULL && keyEvent.getAction() == KeyEvent.ACTION_DOWN){
-                   saveValue();
+                if (actionId == EditorInfo.IME_NULL && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+                    saveValue();
                 }
                 return false;
             }
