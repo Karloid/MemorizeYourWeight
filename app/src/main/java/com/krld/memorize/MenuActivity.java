@@ -3,14 +3,18 @@ package com.krld.memorize;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import com.krld.memorize.common.DataType;
 
-/**
- * Created by Andrey on 7/16/2014.
- */
+import com.activeandroid.Model;
+import com.activeandroid.query.Select;
+import com.krld.memorize.common.DataType;
+import com.krld.memorize.models.Measurement;
+
+import java.util.List;
+
 public class MenuActivity extends Activity {
     public static final String DATATYPE = "datatype";
     private Button weightButton;
@@ -22,6 +26,19 @@ public class MenuActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_menu);
         initButtons();
+
+        testAA();
+    }
+
+    private void testAA() {
+        Measurement measurement = new Measurement();
+        measurement.value = "test";
+        measurement.save();
+        List<Measurement> list = new Select().from(Measurement.class).execute();
+        for (Measurement m : list) {
+            Log.d("MemorizeDebug", m.value + " " + m.getId());
+        }
+
     }
 
     private void initButtons() {

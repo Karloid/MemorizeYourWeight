@@ -5,13 +5,13 @@ import com.krld.memorize.common.DataType;
 
 import java.util.Date;
 
-public class Measurement {
+public class MeasurementLegacy {
     private String weight;
     private Date date;
     private int id;
     private DataType datatype;
 
-    public Measurement(int id, String string, int dateInt, String datatype) {
+    public MeasurementLegacy(int id, String string, int dateInt, String datatype) {
 
         // stub
         if (datatype != null) {

@@ -16,7 +16,7 @@ import android.widget.*;
 import com.krld.memorize.common.DataType;
 import com.krld.memorize.common.DbOpenHelper;
 import com.krld.memorize.common.ListAdapter;
-import com.krld.memorize.model.Measurement;
+import com.krld.memorize.model.MeasurementLegacy;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -133,15 +133,15 @@ public class EditorActivity extends Activity {
                 " from " + DbOpenHelper.MEASUREMENT +
                 " where " + DbOpenHelper.TYPE + " = '" + datatype + "' " +
                 " order by " + DbOpenHelper.DATE + " desc", null);
-        List<Measurement> measurementList = new ArrayList<Measurement>();
+        List<MeasurementLegacy> measurementLegacyList = new ArrayList<MeasurementLegacy>();
         while (cursor.moveToNext()) {
             //   Log.d("KRLD", "id: " + cursor.getInt(0) + " value:  " + cursor.getString(1) + " date: " + cursor.getInt(2) + " type " + cursor.getString(3));
-            measurementList.add(new Measurement(cursor.getInt(0), cursor.getString(1), cursor.getInt(2), cursor.getString(3)));
+            measurementLegacyList.add(new MeasurementLegacy(cursor.getInt(0), cursor.getString(1), cursor.getInt(2), cursor.getString(3)));
         }
         cursor.close();
 
         ListView listView = (ListView) findViewById(R.id.listView);
-        ListAdapter listAdapter = new ListAdapter(EditorActivity.this, R.layout.li_table, measurementList);
+        ListAdapter listAdapter = new ListAdapter(EditorActivity.this, R.layout.li_table, measurementLegacyList);
         listView.setAdapter(listAdapter);
     }
 
