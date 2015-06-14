@@ -2,8 +2,16 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-            android:id="@+id/share_button"
-            android:title="Share"
-            android:icon="@android:drawable/ic_menu_share"
-            android:showAsAction="ifRoom"></item>
+        android:id="@+id/menu_editor_add_custom"
+        android:title="@string/label_add_custom_measure" />
+
+    <item
+        android:id="@+id/menu_editor_import"
+        android:title="@string/label_import" />
+    <item
+        android:id="@+id/menu_editor_export"
+        android:title="@string/label_export" />
+    <item
+        android:id="@+id/menu_editor_remove_all"
+        android:title="@string/label_remove_all" />
 </menu>

@@ -6,4 +6,7 @@
     <string name="weist_button">Объём талии</string>
     <string name="hips_button">Объём бедер</string>
     <string name="menu_button_clicked_toast">Открыть редактор для %s</string>
+    <string name="label_editor">редактор</string>
+    <string name="label_import">Import</string>
+    <string name="label_add_custom_measure">Add Custom</string>
 </resources>

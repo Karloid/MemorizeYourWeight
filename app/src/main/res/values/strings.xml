@@ -9,4 +9,9 @@
     <string name="hips">hips</string>
     <string name="weight">weight</string>
     <string name="menu_button_clicked_toast">Open %s editor</string>
+    <string name="label_editor">editor</string>
+    <string name="label_import">Import</string>
+    <string name="label_export">Export</string>
+    <string name="label_add_custom_measure">Add Custom</string>
+    <string name="label_remove_all">Remove All</string>
 </resources>

@@ -33,27 +33,15 @@ public class EditorActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_editor, menu);
-        MenuItem item = menu.findItem(R.id.share_button);
-        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                updateShareIntent();
-                startActivity(Intent.createChooser(shareIntent, "Share"));
-                return true;
-            }
-        });
-        updateShareIntent();
+    /*    MenuItem item = menu.findItem(R.id.share_button);
+        item.setOnMenuItemClickListener(menuItem -> {
+            startActivity(Intent.createChooser(shareIntent, "Share"));
+            return true;
+        });*/
+        //TODO
         return true;
     }
 
-    private void updateShareIntent() {
-        shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.setType("application/vnd.ms-excel");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "test");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "subject");
-        //shareActionProvider.setShareIntent(shareIntent);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,42 +56,23 @@ public class EditorActivity extends Activity {
     }
 
     private void initTitle() {
-        if (datatype.equals(DataType.WEIGHT)) {
-            setTitle("Вес");
-        } else if (datatype.equals(DataType.WAIST)) {
-            setTitle("Объём талии");
-        } else if (datatype.equals(DataType.HIPS)) {
-            setTitle("Объём бедер");
-        }
+        setTitle(getString(datatype.stringId).toUpperCase() +" : " + getString(R.string.label_editor));
     }
 
     private void initViews() {
         inputText = (EditText) findViewById(R.id.login);
         inputText.setImeActionLabel("Save", KeyEvent.KEYCODE_ENTER);
-        inputText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_NULL && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-                    saveValue();
-                }
-                return false;
+        inputText.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+            if (actionId == EditorInfo.IME_NULL && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+                saveValue();
             }
+            return false;
         });
         saveButton = (Button) findViewById(R.id.saveButton);
         readButton = (Button) findViewById(R.id.readButton);
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveValue();
-            }
-        });
-        readButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                refreshListViewMeasurement();
-            }
-        });
+        saveButton.setOnClickListener(view -> saveValue());
+        readButton.setOnClickListener(view -> refreshListViewMeasurement());
     }
 
     private void saveValue() {
