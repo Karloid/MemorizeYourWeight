@@ -3,10 +3,12 @@ package com.krld.memorize;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import com.krld.memorize.common.DataType;
+import com.krld.memorize.sugar.TestMeasure;
 
 /**
  * Created by Andrey on 7/16/2014.
@@ -22,6 +24,15 @@ public class MenuActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_menu);
         initButtons();
+
+        testSugar();
+    }
+
+    private void testSugar() {
+        TestMeasure testMeasure = new TestMeasure(10);
+        testMeasure.save();
+        testMeasure.getId();
+        Log.d("MemorizeTest", TestMeasure.listAll(TestMeasure.class).size() + " test measurements");
     }
 
     private void initButtons() {
