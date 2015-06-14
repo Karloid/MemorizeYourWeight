@@ -27,18 +27,6 @@ public class MenuActivity extends Activity {
         setContentView(R.layout.act_menu);
         initButtons();
 
-        testAA();
-    }
-
-    private void testAA() {
-        Measurement measurement = new Measurement();
-        measurement.value = "test";
-        measurement.save();
-        List<Measurement> list = new Select().from(Measurement.class).execute();
-        for (Measurement m : list) {
-            Log.d("MemorizeDebug", m.value + " " + m.getId());
-        }
-
     }
 
     private void initButtons() {

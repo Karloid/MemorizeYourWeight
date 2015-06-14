@@ -9,4 +9,7 @@
     <string name="label_editor">редактор</string>
     <string name="label_import">Import</string>
     <string name="label_add_custom_measure">Add Custom</string>
+    <string name="label_select_operation">Select operation</string>
+    <string name="label_edit">Edit</string>
+    <string name="label_cancel">Cancel</string>
 </resources>

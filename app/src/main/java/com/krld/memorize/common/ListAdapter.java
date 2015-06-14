@@ -1,64 +1,79 @@
 package com.krld.memorize.common;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+
 import com.krld.memorize.EditorActivity;
 import com.krld.memorize.R;
 import com.krld.memorize.model.MeasurementLegacy;
+import com.krld.memorize.models.Measurement;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class ListAdapter extends ArrayAdapter<MeasurementLegacy> {
+public class ListAdapter extends BaseAdapter {
 
-    public ListAdapter(Context context, int textViewResourceId) {
-        super(context, textViewResourceId);
+
+    private final Context context;
+
+    public ListAdapter(Context context) {
+        super();
+        this.context = context;
+    }
+    private List<Measurement> items;
+
+    @Override
+    public int getCount() {
+        if (items == null) return 0;
+        return items.size();
     }
 
-    private List<MeasurementLegacy> items;
-
-    public ListAdapter(Context context, int textViewResourceId, List<MeasurementLegacy> items) {
-        super(context, textViewResourceId, items);
-        Log.d("KRLD", " create listAdapter " + items.size());
-        this.items = items;
+    @Override
+    public Object getItem(int position) {
+        return items.get(position);
     }
 
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
+
+    @SuppressLint("SimpleDateFormat")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
         if (v == null) {
             LayoutInflater vi;
-            vi = LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.li_table, null);
+            vi = LayoutInflater.from(context);
+            v = vi.inflate(R.layout.li_table, parent, false);
         }
-        MeasurementLegacy measurementLegacy = items.get(position);
-      //  Log.d("KRLD", measurementLegacy.getWeight().toString() + " pos: " + position);
 
-        if (measurementLegacy != null) {
+        Measurement obj = (Measurement) getItem(position);
+
+        if (obj != null) {
             TextView weightView = (TextView) v.findViewById(R.id.textViewWeight);
             if (weightView != null) {
-                weightView.setText(measurementLegacy.getWeight());
+                weightView.setText(FormatterHelper.formatDouble(obj.value));
             }
             TextView dateView = (TextView) v.findViewById(R.id.textViewDate);
             if (dateView != null) {
-                dateView.setText(new SimpleDateFormat("dd.MM.yyyy H:mm").format(measurementLegacy.getDate()));
+                dateView.setText(new SimpleDateFormat("dd.MM.yyyy H:mm").format(obj.insertDate.getTime()));
             }
-            Button delButton = (Button) v.findViewById(R.id.deleteButton);
-            delButton.setTag(measurementLegacy.getId());
-            delButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    DbService.removeMeasurement((Integer) view.getTag());
-                    ((EditorActivity) ListAdapter.this.getContext()).refreshListViewMeasurement();
-                }
-            });
         }
         return v;
+    }
+
+    public void setItems(List<Measurement> dataList) {
+        this.items = dataList;
+        notifyDataSetChanged();
     }
 }
