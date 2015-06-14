@@ -42,12 +42,7 @@ public class MenuActivity extends Activity {
     }
 
     private void initButtons() {
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToEditorActivity((DataType) view.getTag());
-            }
-        };
+        View.OnClickListener listener = view -> goToEditorActivity((DataType) view.getTag());
 
         weightButton = (Button) findViewById(R.id.weight_button);
         weightButton.setTag(DataType.WEIGHT);
