@@ -56,7 +56,7 @@ public class MenuActivity extends Activity {
     }
 
     private void goToEditorActivity(DataType dataType) {
-        showToast("Open " + dataType + " editor");
+        showToast(String.format(getString(R.string.menu_button_clicked_toast), getString(dataType.stringId)));
         Intent intent = new Intent(this, EditorActivity.class);
         intent.putExtra(DATATYPE, dataType.toString());
         startActivity(intent);

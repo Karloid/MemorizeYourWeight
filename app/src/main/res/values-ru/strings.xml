@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">memorize</string>
+    <string name="DelButtonCaption">Delete record</string>
+    <string name="weight_button">Вес</string>
+    <string name="weist_button">Объём талии</string>
+    <string name="hips_button">Объём бедер</string>
+    <string name="menu_button_clicked_toast">Открыть редактор для %s</string>
+</resources>

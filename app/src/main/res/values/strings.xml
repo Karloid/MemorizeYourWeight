@@ -2,7 +2,11 @@
 <resources>
     <string name="app_name">memorize</string>
     <string name="DelButtonCaption">Delete record</string>
-    <string name="weight_button">Вес</string>
-    <string name="weist_button">Объём талии</string>
-    <string name="hips_button">Объём бедер</string>
+    <string name="weight_button">Weight</string>
+    <string name="weist_button">Weist</string>
+    <string name="hips_button">Hips</string>
+    <string name="waist">waist</string>
+    <string name="hips">hips</string>
+    <string name="weight">weight</string>
+    <string name="menu_button_clicked_toast">Open %s editor</string>
 </resources>
