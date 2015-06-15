@@ -7,13 +7,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 
+import com.activeandroid.Model;
+import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.krld.memorize.common.DataType;
 import com.krld.memorize.common.DbOpenHelper;
 import com.krld.memorize.common.ListAdapter;
@@ -33,19 +39,6 @@ public class EditorActivity extends Activity {
     private ListAdapter listAdapter;
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_editor, menu);
-    /*    MenuItem item = menu.findItem(R.id.share_button);
-        item.setOnMenuItemClickListener(menuItem -> {
-            startActivity(Intent.createChooser(shareIntent, "Share"));
-            return true;
-        });*/
-        //TODO
-        return true;
-    }
-
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_editor);
@@ -56,6 +49,7 @@ public class EditorActivity extends Activity {
 
         refreshListViewMeasurement();
     }
+
 
     private void initTitle() {
         setTitle(getString(datatype.stringId).toUpperCase() + " : " + getString(R.string.label_editor));
@@ -109,13 +103,18 @@ public class EditorActivity extends Activity {
     }
 
     public void refreshListViewMeasurement() {
-        List<Measurement> measurements = new Select().from(Measurement.class).where("DATATYPE = ?", datatype.toString()).execute();
+        List<Measurement> measurements = getSelectQuery().execute();
         Collections.sort(measurements, (lhs, rhs) -> rhs.insertDate.compareTo(lhs.insertDate));
         listAdapter.setItems(measurements);
     }
 
+    @NonNull
+    private From getSelectQuery() {
+        return new Select().from(Measurement.class).where("DATATYPE = ?", datatype.toString());
+    }
+
+    //TODO
     public void longTapOn(Measurement obj) {
-        //TODO
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(
                 EditorActivity.this);
         builderSingle.setIcon(R.drawable.sql_icon);
@@ -146,5 +145,40 @@ public class EditorActivity extends Activity {
                     builderInner.show();*/
                 });
         builderSingle.show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_editor, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_editor_add_custom:
+                break;
+            case R.id.menu_editor_import:
+                break;
+            case R.id.menu_editor_export:
+                exportData();
+                break;
+            case R.id.menu_editor_remove_all:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void exportData() {
+        List<Measurement> items = new Select().from(Measurement.class).execute();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        String json = gson.toJson(items);
+        Log.d("MemorizeLog", json);
+        showToast(String.format(getString(R.string.toast_exported), items.size() +""));
+
+    }
+
+    private void showToast(String string) {
+       Toast.makeText(this, string, Toast.LENGTH_LONG).show();
     }
 }

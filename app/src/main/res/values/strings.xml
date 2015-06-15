@@ -18,4 +18,5 @@
     <string name="label_edit">Edit</string>
     <string name="label_delete">Delete</string>
     <string name="label_cancel">Cancel</string>
+    <string name="toast_exported">Exported all data. Total count %s</string>
 </resources>
