@@ -2,10 +2,8 @@ package com.krld.memorize;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -21,6 +19,7 @@ import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.krld.memorize.common.DataType;
 import com.krld.memorize.common.DbOpenHelper;
 import com.krld.memorize.common.ListAdapter;
@@ -30,12 +29,18 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
+
+import rx.Observable;
+import rx.functions.Action0;
 
 public class EditorActivity extends Activity {
+    private static final int PICKFILE_REQUEST_CODE = 1;
     EditText inputText = null;
     Button saveButton = null;
     Button readButton = null;
@@ -165,14 +170,78 @@ public class EditorActivity extends Activity {
             case R.id.menu_editor_add_custom:
                 break;
             case R.id.menu_editor_import:
+                importData();
                 break;
             case R.id.menu_editor_export:
                 exportData();
                 break;
             case R.id.menu_editor_remove_all:
+                removeAllDataConfirmation();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void removeAllDataConfirmation() {
+        showAlert(getString(R.string.remove_all_confirmation), this::removeAllData);
+    }
+
+    private void removeAllData() {
+        List<Measurement> items = new Select().from(Measurement.class).execute();
+        Observable.from(items).subscribe(Model::delete, Throwable::printStackTrace,
+                () -> {
+                    refreshListViewMeasurement();
+                    showInfo(String.format(getString(R.string.remove_all_end), items.size() + ""));
+                }
+        );
+    }
+
+    private void importData() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("file/*.json");
+        startActivityForResult(intent, PICKFILE_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICKFILE_REQUEST_CODE) {
+            if (handlePickedFile(data)) return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private boolean handlePickedFile(Intent data) {
+        Uri importPath = data.getData();
+        if (!importPath.getPath().contains(".json")) {
+            showError(getString(R.string.label_import_bad_file));
+            return true;
+        }
+        File importFile = new File(importPath.getPath());
+        try {
+            String contents = new Scanner(importFile).useDelimiter("\\A").next();
+            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+            List<Measurement> fromJson = gson.fromJson(contents, new TypeToken<ArrayList<Measurement>>() {
+            }.getType());
+            List<Measurement> currentMeasumenets = new Select().from(Measurement.class).execute();
+
+            fromJson = Observable.from(fromJson).filter(measurement -> {
+                for (Measurement item : currentMeasumenets) {
+                    if (item.simpleEquals(measurement))
+                        return false;
+                }
+                return true;
+            }).toList().toBlocking().single();
+            final List<Measurement> finalFromJson = fromJson;
+            Observable.from(fromJson).subscribe(Model::save, Throwable::printStackTrace, () -> {
+                refreshListViewMeasurement();
+                showInfo(String.format(getString(R.string.label_import_successful), finalFromJson.size() + ""));
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError(e.getMessage());
+        }
+        return false;
     }
 
     private void exportData() {
@@ -182,13 +251,13 @@ public class EditorActivity extends Activity {
         Log.d("MemorizeLog", json);
         try {
             File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            String fileName = "memorize_data_" + new SimpleDateFormat("yyyy-MM-dd_HH:mm").format(new Date()) + ".json";
+            String fileName = "memorize " + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()) + ".json";
             File gpxfile = new File(root, fileName);
             FileWriter writer = new FileWriter(gpxfile);
             writer.append(json);
             writer.flush();
             writer.close();
-            showToast(String.format(getString(R.string.toast_exported), fileName, items.size() + ""));
+            showInfo(String.format(getString(R.string.toast_exported), fileName, items.size() + ""));
         } catch (IOException e) {
             e.printStackTrace();
             showToast(String.format(getString(R.string.toast_exported_error), e.getMessage()));
@@ -197,5 +266,42 @@ public class EditorActivity extends Activity {
 
     private void showToast(String string) {
         Toast.makeText(this, string, Toast.LENGTH_LONG).show();
+    }
+
+    private void showError(String message) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.label_error)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    private void showAlert(String message, Action0 action0) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.label_alert)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    action0.call();
+                    dialog.dismiss();
+                })
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    private void showInfo(String message) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.label_info)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .show();
     }
 }

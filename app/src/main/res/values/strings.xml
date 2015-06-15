@@ -18,6 +18,13 @@
     <string name="label_edit">Edit</string>
     <string name="label_delete">Delete</string>
     <string name="label_cancel">Cancel</string>
-    <string formatted="false" name="toast_exported">Exported all data to %s in downloads folder. Total count %s</string>
+    <string formatted="false" name="toast_exported">All data has been exported to \"%s\" in downloads folder. Number of entities %s.</string>
     <string formatted="false" name="toast_exported_error">Export error: %s</string>
+    <string name="label_import_bad_file">Bad file</string>
+    <string name="label_error">Error</string>
+    <string name="label_info">Info</string>
+    <string name="label_import_successful">Import successfull, %s new entities.</string>
+    <string name="label_alert">Alert</string>
+    <string name="remove_all_confirmation">You about to delete all data, are you sure?</string>
+    <string name="remove_all_end">Removed all %s entities</string>
 </resources>

@@ -33,4 +33,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
     compile 'com.google.code.gson:gson:2.3'
+    compile 'io.reactivex:rxjava:1.0.12'
 }
