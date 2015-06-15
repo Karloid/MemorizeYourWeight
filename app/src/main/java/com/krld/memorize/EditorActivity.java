@@ -1,5 +1,6 @@
 package com.krld.memorize;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 
@@ -147,7 +149,7 @@ public class EditorActivity extends Activity {
                 (dialog, which) -> {
                     //TODO
                     if (which == 0) {
-                        //edit
+                        showEditDialog(obj);
                     } else if (which == 1) {
                         obj.delete();
                         refreshListView();
@@ -175,6 +177,7 @@ public class EditorActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_editor_add_custom:
+                addCustom();
                 break;
             case R.id.menu_editor_import:
                 importData();
@@ -190,6 +193,28 @@ public class EditorActivity extends Activity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressLint("NewApi")
+    private void addCustom() {
+        Measurement measurement = new Measurement();
+        showEditDialog(measurement);
+    }
+
+    private void showEditDialog(Measurement measurement) {
+        View v = getLayoutInflater().inflate(R.layout.v_custom_item, null);
+        EditText editValue = (EditText) v.findViewById(R.id.edit_value);
+        editValue.setText(FormatterHelper.formatDouble(measurement.value));
+        DatePicker datePicker = (DatePicker) v.findViewById(R.id.date_picker);
+        TimePicker timePicker = (TimePicker) v.findViewById(R.id.time_picker);
+        timePicker.setIs24HourView(true);
+        //TODO
+        new AlertDialog.Builder(this).setView(v)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    measurement.save();
+                })
+                .setNegativeButton(android.R.string.cancel, (dialog1, which1) -> dialog1.dismiss())
+                .show();
     }
 
     private void removeAllDataConfirmation() {
@@ -261,7 +286,7 @@ public class EditorActivity extends Activity {
         Log.d("MemorizeLog", json);
         try {
             File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            String fileName = "memorize " + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()) + ".json";
+            @SuppressLint("SimpleDateFormat") String fileName = "memorize " + new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()) + ".json";
             File gpxfile = new File(root, fileName);
             FileWriter writer = new FileWriter(gpxfile);
             writer.append(json);

@@ -28,4 +28,7 @@
     <string name="remove_all_confirmation">You about to delete all data, are you sure?</string>
     <string name="remove_all_end">Removed all %s entities.</string>
     <string name="label_remove_successful">Measurement: %s removed.</string>
+    <string name="label_value">Value</string>
+    <string name="label_date">Date</string>
+    <string name="label_time">Time</string>
 </resources>
