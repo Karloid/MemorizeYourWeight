@@ -18,5 +18,6 @@
     <string name="label_edit">Edit</string>
     <string name="label_delete">Delete</string>
     <string name="label_cancel">Cancel</string>
-    <string name="toast_exported">Exported all data. Total count %s</string>
+    <string formatted="false" name="toast_exported">Exported all data to %s in downloads folder. Total count %s</string>
+    <string formatted="false" name="toast_exported_error">Export error: %s</string>
 </resources>

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -25,8 +26,13 @@ import com.krld.memorize.common.DbOpenHelper;
 import com.krld.memorize.common.ListAdapter;
 import com.krld.memorize.models.Measurement;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class EditorActivity extends Activity {
@@ -174,11 +180,22 @@ public class EditorActivity extends Activity {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String json = gson.toJson(items);
         Log.d("MemorizeLog", json);
-        showToast(String.format(getString(R.string.toast_exported), items.size() +""));
-
+        try {
+            File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            String fileName = "memorize_data_" + new SimpleDateFormat("yyyy-MM-dd_HH:mm").format(new Date()) + ".json";
+            File gpxfile = new File(root, fileName);
+            FileWriter writer = new FileWriter(gpxfile);
+            writer.append(json);
+            writer.flush();
+            writer.close();
+            showToast(String.format(getString(R.string.toast_exported), fileName, items.size() + ""));
+        } catch (IOException e) {
+            e.printStackTrace();
+            showToast(String.format(getString(R.string.toast_exported_error), e.getMessage()));
+        }
     }
 
     private void showToast(String string) {
-       Toast.makeText(this, string, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, string, Toast.LENGTH_LONG).show();
     }
 }
