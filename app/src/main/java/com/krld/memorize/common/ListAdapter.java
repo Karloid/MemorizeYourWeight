@@ -29,6 +29,7 @@ public class ListAdapter extends BaseAdapter {
         super();
         this.context = context;
     }
+
     private List<Measurement> items;
 
     @Override
@@ -66,7 +67,7 @@ public class ListAdapter extends BaseAdapter {
             }
             TextView dateView = (TextView) v.findViewById(R.id.textViewDate);
             if (dateView != null) {
-                dateView.setText(new SimpleDateFormat("dd.MM.yyyy H:mm").format(obj.insertDate.getTime()));
+                dateView.setText(FormatterHelper.formatDate(obj.insertDate.getTime()));
             }
         }
         return v;

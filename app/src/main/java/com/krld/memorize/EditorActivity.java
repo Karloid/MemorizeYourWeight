@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.krld.memorize.common.DataType;
+import com.krld.memorize.common.FormatterHelper;
 import com.krld.memorize.common.ListAdapter;
 import com.krld.memorize.models.Measurement;
 
@@ -54,7 +55,7 @@ public class EditorActivity extends Activity {
         datatype = DataType.valueOf(getIntent().getStringExtra(MenuActivity.DATATYPE));
         initTitle();
         initViews();
-        refreshListViewMeasurement();
+        refreshListView();
 
 
         ActionBar actionBar = getActionBar();
@@ -82,14 +83,13 @@ public class EditorActivity extends Activity {
         readButton = (Button) findViewById(R.id.readButton);
 
         saveButton.setOnClickListener(view -> saveValue());
-        readButton.setOnClickListener(view -> refreshListViewMeasurement());
+        readButton.setOnClickListener(view -> refreshListView());
 
         ListView listView = (ListView) findViewById(R.id.listView);
         listAdapter = new ListAdapter(EditorActivity.this);
         listView.setAdapter(listAdapter);
-        listView.setOnItemLongClickListener((parent, view, position, id) -> {
+        listView.setOnItemClickListener((parent, view, position, id) -> {
                     longTapOn((Measurement) parent.getItemAtPosition(position));
-                    return true;
                 }
         );
     }
@@ -113,10 +113,10 @@ public class EditorActivity extends Activity {
 
         inputText.setText("");
         Toast.makeText(this, "Inserted!", Toast.LENGTH_SHORT).show();
-        refreshListViewMeasurement();
+        refreshListView();
     }
 
-    public void refreshListViewMeasurement() {
+    public void refreshListView() {
         List<Measurement> measurements = getSelectQuery().execute();
         Collections.sort(measurements, (lhs, rhs) -> rhs.insertDate.compareTo(lhs.insertDate));
         listAdapter.setItems(measurements);
@@ -137,7 +137,7 @@ public class EditorActivity extends Activity {
                 EditorActivity.this,
                 android.R.layout.simple_list_item_1);
         arrayAdapter.add(getString(R.string.label_edit));
-        arrayAdapter.add(getString(R.string.label_delete));
+        arrayAdapter.add(getString(R.string.label_remove));
         builderSingle.setNegativeButton(R.string.label_cancel,
                 (dialog, which) -> {
                     dialog.dismiss();
@@ -146,17 +146,21 @@ public class EditorActivity extends Activity {
         builderSingle.setAdapter(arrayAdapter,
                 (dialog, which) -> {
                     //TODO
-                    //edit/delete
-                   /* String strName = arrayAdapter.getItem(which);
-                    AlertDialog.Builder builderInner = new AlertDialog.Builder(
-                            EditorActivity.this);
-                    builderInner.setMessage(strName);
-                    builderInner.setTitle("Your Selected Item is");
-                    builderInner.setPositiveButton("Ok",
-                            (dialog1, which1) -> {
-                                dialog1.dismiss();
-                            });
-                    builderInner.show();*/
+                    if (which == 0) {
+                        //edit
+                    } else if (which == 1) {
+                        obj.delete();
+                        refreshListView();
+                        showInfo(String.format(getString(R.string.label_remove_successful),
+                                        "\n\"" +
+                                                FormatterHelper.formatDouble(obj.value) +
+                                                " " +
+                                                FormatterHelper.formatDate(obj.insertDate.getTime()) +
+                                                "\""
+                                )
+                        );
+                    }
+
                 });
         builderSingle.show();
     }
@@ -196,7 +200,7 @@ public class EditorActivity extends Activity {
         List<Measurement> items = new Select().from(Measurement.class).execute();
         Observable.from(items).subscribe(Model::delete, Throwable::printStackTrace,
                 () -> {
-                    refreshListViewMeasurement();
+                    refreshListView();
                     showInfo(String.format(getString(R.string.remove_all_end), items.size() + ""));
                 }
         );
@@ -211,13 +215,13 @@ public class EditorActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICKFILE_REQUEST_CODE) {
-           handlePickedFile(data);
+            handlePickedFile(data);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void handlePickedFile(Intent data) {
-        if (data == null) return ;
+        if (data == null) return;
         Uri importPath = data.getData();
         if (!importPath.getPath().contains(".json")) {
             showError(getString(R.string.label_import_bad_file));
@@ -240,7 +244,7 @@ public class EditorActivity extends Activity {
             }).toList().toBlocking().single();
             final List<Measurement> finalFromJson = fromJson;
             Observable.from(fromJson).subscribe(Model::save, Throwable::printStackTrace, () -> {
-                refreshListViewMeasurement();
+                refreshListView();
                 showInfo(String.format(getString(R.string.label_import_successful), finalFromJson.size() + ""));
             });
 
