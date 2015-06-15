@@ -1,5 +1,6 @@
 package com.krld.memorize;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -21,7 +22,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.krld.memorize.common.DataType;
-import com.krld.memorize.common.DbOpenHelper;
 import com.krld.memorize.common.ListAdapter;
 import com.krld.memorize.models.Measurement;
 
@@ -44,9 +44,7 @@ public class EditorActivity extends Activity {
     EditText inputText = null;
     Button saveButton = null;
     Button readButton = null;
-    public static DbOpenHelper dbHelper = null;
     private DataType datatype;
-    private Intent shareIntent;
     private ListAdapter listAdapter;
 
     @Override
@@ -55,10 +53,15 @@ public class EditorActivity extends Activity {
         setContentView(R.layout.act_editor);
         datatype = DataType.valueOf(getIntent().getStringExtra(MenuActivity.DATATYPE));
         initTitle();
-        dbHelper = new DbOpenHelper(EditorActivity.this, DbOpenHelper.DB_NAME, null, DbOpenHelper.DB_VERSION);
         initViews();
-
         refreshListViewMeasurement();
+
+
+        ActionBar actionBar = getActionBar();
+        //noinspection ConstantConditions
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        //noinspection ConstantConditions
+        actionBar.setHomeButtonEnabled(true);
     }
 
 
@@ -178,6 +181,9 @@ public class EditorActivity extends Activity {
             case R.id.menu_editor_remove_all:
                 removeAllDataConfirmation();
                 break;
+            case android.R.id.home:
+                this.finish();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -205,16 +211,17 @@ public class EditorActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICKFILE_REQUEST_CODE) {
-            if (handlePickedFile(data)) return;
+           handlePickedFile(data);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private boolean handlePickedFile(Intent data) {
+    private void handlePickedFile(Intent data) {
+        if (data == null) return ;
         Uri importPath = data.getData();
         if (!importPath.getPath().contains(".json")) {
             showError(getString(R.string.label_import_bad_file));
-            return true;
+            return;
         }
         File importFile = new File(importPath.getPath());
         try {
@@ -241,7 +248,6 @@ public class EditorActivity extends Activity {
             e.printStackTrace();
             showError(e.getMessage());
         }
-        return false;
     }
 
     private void exportData() {
