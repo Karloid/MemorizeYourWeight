@@ -23,7 +23,7 @@
     <string name="label_import_bad_file">Bad file</string>
     <string name="label_error">Error</string>
     <string name="label_info">Info</string>
-    <string name="label_import_successful">Import successfull, %s new entities.</string>
+    <string name="label_import_successful">Import successful %s new entities.</string>
     <string name="label_alert">Alert</string>
     <string name="remove_all_confirmation">You about to delete all data, are you sure?</string>
     <string name="remove_all_end">Removed all %s entities.</string>

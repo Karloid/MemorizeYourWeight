@@ -44,6 +44,7 @@ import rx.Observable;
 
 public class EditorActivity extends Activity {
     private static final int PICKFILE_REQUEST_CODE = 1;
+    public static final float ERROR_VALUE = -1f;
     EditText inputText = null;
     Button saveButton = null;
     Button readButton = null;
@@ -99,7 +100,11 @@ public class EditorActivity extends Activity {
         String string = inputText.getText().toString().replaceAll(",", ".");
         Measurement measurement = new Measurement();
 
-        measurement.value = parseDoubleFromString(string);
+        double v = parseDoubleFromString(string);
+        if (v == ERROR_VALUE) {
+            return;
+        }
+        measurement.value = v;
         measurement.datatype = dateType;
         measurement.insertDate = date;
         measurement.save();
@@ -222,7 +227,11 @@ public class EditorActivity extends Activity {
         new AlertDialog.Builder(this).setView(v)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     String string = editValue.getText().toString().replaceAll(",", ".");
-                    obj.value = parseDoubleFromString(string);
+                    double v2 = parseDoubleFromString(string);
+                    if (v2 == ERROR_VALUE) {
+                        return;
+                    }
+                    obj.value = v2;
                     cal.set(Calendar.YEAR, datePicker.getYear());
                     cal.set(Calendar.MONTH, datePicker.getMonth());
                     cal.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());

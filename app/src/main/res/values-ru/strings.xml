@@ -14,7 +14,7 @@
     <string name="label_cancel">Отмена</string>
     <string formatted="false" name="toast_exported_error">Ошибка экспорта %s</string>
     <string formatted="false" name="toast_exported">Экспорт в файл %s в download папке. Общее количество записей %s.</string>
-    <string name="label_alert" translatable="false">Внимание</string>
+    <string name="label_alert">Внимание</string>
     <string name="hips">Объём бедер</string>
     <string name="label_date">Дата</string>
     <string name="label_error">Ошибка</string>
