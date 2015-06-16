@@ -200,6 +200,9 @@ public class EditorActivity extends Activity {
         TimePicker timePicker = (TimePicker) v.findViewById(R.id.time_picker);
         timePicker.setIs24HourView(true);
 
+        datePicker.setDescendantFocusability(TimePicker.FOCUS_BLOCK_DESCENDANTS);
+        timePicker.setDescendantFocusability(TimePicker.FOCUS_BLOCK_DESCENDANTS);
+
         editValue.setText(obj.value != 0f ?FormatterHelper.formatDouble(obj.value) : "");
 
         Calendar cal = obj.insertDate;
