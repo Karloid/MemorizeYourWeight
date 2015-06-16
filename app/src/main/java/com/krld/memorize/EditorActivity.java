@@ -59,7 +59,6 @@ public class EditorActivity extends Activity {
         initViews();
         refreshListView();
 
-
         ActionBar actionBar = getActionBar();
         //noinspection ConstantConditions
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -125,7 +124,7 @@ public class EditorActivity extends Activity {
     public void longTapOn(Measurement obj) {
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(
                 EditorActivity.this);
-        builderSingle.setIcon(R.drawable.sql_icon);
+        builderSingle.setIcon(R.drawable.sql_icon_mini);
         builderSingle.setTitle(R.string.label_select_operation);
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                 EditorActivity.this,
