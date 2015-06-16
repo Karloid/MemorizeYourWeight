@@ -26,6 +26,7 @@ import com.google.gson.reflect.TypeToken;
 import com.krld.memorize.common.DataType;
 import com.krld.memorize.common.FormatterHelper;
 import com.krld.memorize.common.ListAdapter;
+import com.krld.memorize.helpers.DialogHelper;
 import com.krld.memorize.models.Measurement;
 
 import java.io.File;
@@ -40,7 +41,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import rx.Observable;
-import rx.functions.Action0;
 
 public class EditorActivity extends Activity {
     private static final int PICKFILE_REQUEST_CODE = 1;
@@ -77,14 +77,14 @@ public class EditorActivity extends Activity {
         inputText.setImeActionLabel("Save", KeyEvent.KEYCODE_ENTER);
         inputText.setOnEditorActionListener((textView, actionId, keyEvent) -> {
             if (actionId == EditorInfo.IME_NULL && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-                saveValue();
+                saveValue(Calendar.getInstance(), datatype.toString());
             }
             return false;
         });
         saveButton = (Button) findViewById(R.id.saveButton);
         readButton = (Button) findViewById(R.id.readButton);
 
-        saveButton.setOnClickListener(view -> saveValue());
+        saveButton.setOnClickListener(view -> saveValue(Calendar.getInstance(), datatype.toString()));
         readButton.setOnClickListener(view -> refreshListView());
 
         ListView listView = (ListView) findViewById(R.id.listView);
@@ -96,21 +96,13 @@ public class EditorActivity extends Activity {
         );
     }
 
-    private void saveValue() {
-        double value;
-        try {
-            value = Double.parseDouble(inputText.getText().toString().replaceAll(",", "."));
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Not a number", Toast.LENGTH_SHORT).show();
-            inputText.setText("");
-            return;
-        }
+    private void saveValue(Calendar date, String dateType) {
+        String string = inputText.getText().toString().replaceAll(",", ".");
         Measurement measurement = new Measurement();
 
-        measurement.value = value;
-        measurement.datatype = datatype.toString();
-        measurement.insertDate = Calendar.getInstance();
+        measurement.value = parseDoubleFromString(string);
+        measurement.datatype = dateType;
+        measurement.insertDate = date;
         measurement.save();
 
         inputText.setText("");
@@ -153,7 +145,7 @@ public class EditorActivity extends Activity {
                     } else if (which == 1) {
                         obj.delete();
                         refreshListView();
-                        showInfo(String.format(getString(R.string.label_remove_successful),
+                        DialogHelper.showInfo(this, String.format(getString(R.string.label_remove_successful),
                                         "\n\"" +
                                                 FormatterHelper.formatDouble(obj.value) +
                                                 " " +
@@ -198,27 +190,64 @@ public class EditorActivity extends Activity {
     @SuppressLint("NewApi")
     private void addCustom() {
         Measurement measurement = new Measurement();
+        measurement.insertDate = Calendar.getInstance();
         showEditDialog(measurement);
     }
 
-    private void showEditDialog(Measurement measurement) {
+    private void showEditDialog(Measurement obj) {
         View v = getLayoutInflater().inflate(R.layout.v_custom_item, null);
         EditText editValue = (EditText) v.findViewById(R.id.edit_value);
-        editValue.setText(FormatterHelper.formatDouble(measurement.value));
         DatePicker datePicker = (DatePicker) v.findViewById(R.id.date_picker);
         TimePicker timePicker = (TimePicker) v.findViewById(R.id.time_picker);
         timePicker.setIs24HourView(true);
+
+        editValue.setText(FormatterHelper.formatDouble(obj.value));
+
+        Calendar cal = obj.insertDate;
+
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int min = cal.get(Calendar.MINUTE);
+
+        datePicker.updateDate(year, month, day);
+
+        timePicker.setCurrentHour(hour);
+        timePicker.setCurrentMinute(min);
+
         //TODO
         new AlertDialog.Builder(this).setView(v)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                    measurement.save();
+                    String string = editValue.getText().toString().replaceAll(",", ".");
+                    obj.value = parseDoubleFromString(string);
+                    cal.set(Calendar.YEAR, datePicker.getYear());
+                    cal.set(Calendar.MONTH, datePicker.getMonth());
+                    cal.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
+                    cal.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
+                    cal.set(Calendar.MINUTE, timePicker.getCurrentMinute());
+                    obj.datatype = datatype.toString();
+                    obj.save();
+                    refreshListView();
                 })
                 .setNegativeButton(android.R.string.cancel, (dialog1, which1) -> dialog1.dismiss())
                 .show();
     }
 
+    private double parseDoubleFromString(String string) {
+        double value = -1;
+        try {
+            value = Double.parseDouble(string);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Not a number", Toast.LENGTH_SHORT).show();
+            inputText.setText("");
+        }
+        return value;
+    }
+
     private void removeAllDataConfirmation() {
-        showAlert(getString(R.string.remove_all_confirmation), this::removeAllData);
+        DialogHelper.showAlert(this, getString(R.string.remove_all_confirmation), this::removeAllData);
     }
 
     private void removeAllData() {
@@ -226,7 +255,7 @@ public class EditorActivity extends Activity {
         Observable.from(items).subscribe(Model::delete, Throwable::printStackTrace,
                 () -> {
                     refreshListView();
-                    showInfo(String.format(getString(R.string.remove_all_end), items.size() + ""));
+                    DialogHelper.showInfo(this, String.format(getString(R.string.remove_all_end), items.size() + ""));
                 }
         );
     }
@@ -245,11 +274,15 @@ public class EditorActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private void showToast(String string) {
+        Toast.makeText(this, string, Toast.LENGTH_LONG).show();
+    }
+
     private void handlePickedFile(Intent data) {
         if (data == null) return;
         Uri importPath = data.getData();
         if (!importPath.getPath().contains(".json")) {
-            showError(getString(R.string.label_import_bad_file));
+            DialogHelper.showError(getString(R.string.label_import_bad_file), this);
             return;
         }
         File importFile = new File(importPath.getPath());
@@ -270,12 +303,12 @@ public class EditorActivity extends Activity {
             final List<Measurement> finalFromJson = fromJson;
             Observable.from(fromJson).subscribe(Model::save, Throwable::printStackTrace, () -> {
                 refreshListView();
-                showInfo(String.format(getString(R.string.label_import_successful), finalFromJson.size() + ""));
+                DialogHelper.showInfo(this, String.format(getString(R.string.label_import_successful), finalFromJson.size() + ""));
             });
 
         } catch (Exception e) {
             e.printStackTrace();
-            showError(e.getMessage());
+            DialogHelper.showError(e.getMessage(), this);
         }
     }
 
@@ -292,51 +325,12 @@ public class EditorActivity extends Activity {
             writer.append(json);
             writer.flush();
             writer.close();
-            showInfo(String.format(getString(R.string.toast_exported), fileName, items.size() + ""));
+            DialogHelper.showInfo(this, String.format(getString(R.string.toast_exported), fileName, items.size() + ""));
         } catch (IOException e) {
             e.printStackTrace();
             showToast(String.format(getString(R.string.toast_exported_error), e.getMessage()));
         }
     }
 
-    private void showToast(String string) {
-        Toast.makeText(this, string, Toast.LENGTH_LONG).show();
-    }
 
-    private void showError(String message) {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.label_error)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                    dialog.dismiss();
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-    }
-
-    private void showAlert(String message, Action0 action0) {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.label_alert)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                    action0.call();
-                    dialog.dismiss();
-                })
-                .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-                    dialog.dismiss();
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-    }
-
-    private void showInfo(String message) {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.label_info)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                    dialog.dismiss();
-                })
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .show();
-    }
 }
