@@ -10,9 +10,11 @@
         android:name="com.krld.memorize.Application"
          >
         <activity android:name=".EditorActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name">
         </activity>
         <activity android:name=".MenuActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

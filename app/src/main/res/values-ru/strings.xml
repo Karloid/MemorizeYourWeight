@@ -1,17 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">memorize</string>
-    <string name="DelButtonCaption">Delete record</string>
+    <string name="app_name">Запоминалка</string>
+    <string name="DelButtonCaption">Удалить запись</string>
     <string name="weight_button">Вес</string>
     <string name="weist_button">Объём талии</string>
     <string name="hips_button">Объём бедер</string>
     <string name="menu_button_clicked_toast">Открыть редактор для %s</string>
     <string name="label_editor">редактор</string>
-    <string name="label_import">Import</string>
-    <string name="label_add_custom_measure">Add Custom</string>
-    <string name="label_select_operation">Select operation</string>
-    <string name="label_edit">Edit</string>
-    <string name="label_cancel">Cancel</string>
-    <string formatted="false" name="toast_exported_error">Export error: %s</string>
-    <string formatted="false" name="toast_exported">Exported all data to %s in downloads folder. Total count %s</string>
+    <string name="label_import">Импорт</string>
+    <string name="label_add_custom_measure">Добавить с указанием времени</string>
+    <string name="label_select_operation">Выбор операции</string>
+    <string name="label_edit">Редактировать</string>
+    <string name="label_cancel">Отмена</string>
+    <string formatted="false" name="toast_exported_error">Ошибка экспорта %s</string>
+    <string formatted="false" name="toast_exported">Экспорт в файл %s в download папке. Общее количество записей %s.</string>
+    <string name="label_alert" translatable="false">Внимание</string>
+    <string name="hips">Объём бедер</string>
+    <string name="label_date">Дата</string>
+    <string name="label_error">Ошибка</string>
+    <string name="label_export">Экспорт</string>
+    <string name="label_import_bad_file">Недопустимый формат файла</string>
+    <string name="label_import_successful">Успешный импорт, %s новых записей</string>
+    <string name="label_info">Информация</string>
+    <string name="label_remove">Удалить</string>
+    <string name="label_remove_all">Удалить все</string>
+    <string name="label_remove_successful">Запись %s удалена.</string>
+    <string name="label_time">Время</string>
+    <string name="label_value">Значение</string>
+    <string name="remove_all_confirmation">Вы хотите удалить все записи из всех категорий?</string>
+    <string name="remove_all_end">Удалены все %s записи.</string>
+    <string name="waist">талия</string>
+    <string name="weight">вес</string>
 </resources>
