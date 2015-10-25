@@ -1,23 +1,16 @@
-package com.krld.memorize.common;
+package com.krld.diet.memorize.common;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
-import com.krld.memorize.EditorActivity;
-import com.krld.memorize.R;
-import com.krld.memorize.model.MeasurementLegacy;
-import com.krld.memorize.models.Measurement;
+import com.krld.diet.R;
+import com.krld.diet.memorize.models.Measurement;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class ListAdapter extends BaseAdapter {

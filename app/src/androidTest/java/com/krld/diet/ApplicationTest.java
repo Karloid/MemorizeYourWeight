@@ -1,4 +1,4 @@
-package com.krld.memorize;
+package com.krld.diet;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

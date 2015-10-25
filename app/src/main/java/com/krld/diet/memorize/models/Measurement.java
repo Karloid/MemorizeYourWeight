@@ -1,4 +1,4 @@
-package com.krld.memorize.models;
+package com.krld.diet.memorize.models;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;

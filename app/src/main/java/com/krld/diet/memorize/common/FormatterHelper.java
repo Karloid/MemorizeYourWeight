@@ -1,4 +1,4 @@
-package com.krld.memorize.common;
+package com.krld.diet.memorize.common;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

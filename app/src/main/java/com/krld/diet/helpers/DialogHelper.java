@@ -1,9 +1,9 @@
-package com.krld.memorize.helpers;
+package com.krld.diet.helpers;
 
 import android.app.AlertDialog;
 import android.content.Context;
 
-import com.krld.memorize.R;
+import com.krld.diet.R;
 
 import rx.functions.Action0;
 

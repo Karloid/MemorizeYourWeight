@@ -1,4 +1,4 @@
-package com.krld.memorize;
+package com.krld.diet.memorize.activities;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -23,11 +23,12 @@ import com.activeandroid.query.Select;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.krld.memorize.common.DataType;
-import com.krld.memorize.common.FormatterHelper;
-import com.krld.memorize.common.ListAdapter;
-import com.krld.memorize.helpers.DialogHelper;
-import com.krld.memorize.models.Measurement;
+import com.krld.diet.R;
+import com.krld.diet.memorize.common.DataType;
+import com.krld.diet.memorize.common.FormatterHelper;
+import com.krld.diet.memorize.common.ListAdapter;
+import com.krld.diet.helpers.DialogHelper;
+import com.krld.diet.memorize.models.Measurement;
 
 import java.io.File;
 import java.io.FileWriter;
