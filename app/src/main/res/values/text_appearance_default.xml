@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+             From android 4.1 / 4.2 / 5.0, the following Roboto font families are available:
+
+             android:fontFamily="sans-serif"           // roboto regular
+             android:fontFamily="sans-serif-light"     // roboto light
+             android:fontFamily="sans-serif-condensed" // roboto condensed
+             android:fontFamily="sans-serif-thin"      // roboto thin (android 4.2)
+             android:fontFamily="sans-serif-medium"    // roboto medium (android 5.0)
+             in combination with
+
+             android:textStyle="normal|bold|italic"
+             this 14 variants are possible:
+
+             Roboto regular
+             Roboto italic
+             Roboto bold
+             Roboto bold italic
+             Roboto-Light
+             Roboto-Light italic
+             Roboto-Thin
+             Roboto-Thin italic
+             Roboto-Condensed
+             Roboto-Condensed italic
+             Roboto-Condensed bold
+             Roboto-Condensed bold italic
+             Roboto-Medium
+             Roboto-Medium italic
+           -->
+
+    <style name="TextAppearance.Default" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/text_default</item>
+        <item name="android:gravity">left</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_medium</item>
+    </style>
+
+    <!-- Regular -->
+    <style name="TextAppearance.Default.Regular">
+        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.Medium">
+        <item name="android:textSize">@dimen/text_medium</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.Medium.White">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.XXXSmall">
+        <item name="android:textSize">@dimen/text_xxxsmall</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.XXXSmall.White">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.XXSmall">
+        <item name="android:textSize">@dimen/text_xxsmall</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.Small">
+        <item name="android:textSize">@dimen/text_small</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.Small.Blue">
+        <item name="android:textColor">@color/text_primary_blue</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.Small.White">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.XSmall">
+        <item name="android:textSize">@dimen/text_xsmall</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.XSmall.Blue">
+        <item name="android:textColor">@color/text_primary_blue</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.XSmall.White">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.XSmall.Dim">
+        <item name="android:textColor">@color/text_dim</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.Large">
+        <item name="android:textSize">@dimen/text_large</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.Large.White">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.Large.Blue">
+        <item name="android:textColor">@color/text_primary_blue</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.XLarge">
+        <item name="android:textSize">@dimen/text_xlarge</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.XLarge.White">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.XLarge.Blue">
+        <item name="android:textColor">@color/text_primary_blue</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.XXLarge">
+        <item name="android:textSize">@dimen/text_xxlarge</item>
+    </style>
+
+    <style name="TextAppearance.Default.Regular.XXLarge.White">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+
+    <!-- Light -->
+    <style name="TextAppearance.Default.Light">
+        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-light</item>
+    </style>
+
+    <style name="TextAppearance.Default.Light.Small">
+        <item name="android:textSize">@dimen/text_small</item>
+    </style>
+
+    <style name="TextAppearance.Default.Light.XSmall">
+        <item name="android:textSize">@dimen/text_xsmall</item>
+    </style>
+
+    <style name="TextAppearance.Default.Light.XXXSmall">
+        <item name="android:textSize">@dimen/text_xxxsmall</item>
+    </style>
+
+    <style name="TextAppearance.Default.Light.XXXSmall.White">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <style name="TextAppearance.Default.Light.XSmall.White">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <style name="TextAppearance.Default.Light.XLarge">
+        <item name="android:textSize">@dimen/text_xlarge</item>
+    </style>
+
+    <style name="TextAppearance.Default.Light.XLarge.White">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <style name="TextAppearance.Default.Light.Huge">
+        <item name="android:textSize">@dimen/text_huge</item>
+    </style>
+
+    <style name="TextAppearance.Default.Light.Huge.White">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <style name="TextAppearance.Default.Light.XHuge">
+        <item name="android:textSize">@dimen/text_xhuge</item>
+    </style>
+
+    <style name="TextAppearance.Default.Light.XHuge.White">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <style name="TextAppearance.Default.Light.XXHuge">
+        <item name="android:textSize">@dimen/text_xxhuge</item>
+    </style>
+
+    <style name="TextAppearance.Default.Light.XXHuge.White">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <!-- Bold -->
+    <style name="TextAppearance.Default.Bold">
+        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.Default.Bold.XSmall">
+        <item name="android:textSize">@dimen/text_xsmall</item>
+    </style>
+
+    <style name="TextAppearance.Default.Bold.XSmall.Blue">
+        <item name="android:textColor">@color/text_primary_blue</item>
+    </style>
+
+    <style name="TextAppearance.Default.Bold.XSmall.White">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <style name="TextAppearance.Default.Bold.XXSmall">
+        <item name="android:textSize">@dimen/text_xxsmall</item>
+    </style>
+
+    <style name="TextAppearance.Default.Bold.XXSmall.White">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <style name="TextAppearance.Default.Bold.XXSmall.Grey">
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <style name="TextAppearance.Default.Bold.XXSmall.Blue">
+        <item name="android:textColor">@color/text_primary_blue</item>
+    </style>
+
+    <style name="TextAppearance.Default.Bold.XXSmall.Blue.Light">
+        <item name="android:textColor">@color/text_primary_light</item>
+    </style>
+
+    <style name="TextAppearance.Default.Bold.Small">
+        <item name="android:textSize">@dimen/text_small</item>
+    </style>
+
+    <style name="TextAppearance.Default.Bold.Small.White">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <style name="TextAppearance.Default.Bold.Small.Blue">
+        <item name="android:textColor">@color/text_primary_blue</item>
+    </style>
+
+    <style name="TextAppearance.Default.Bold.Medium">
+        <item name="android:textSize">@dimen/text_medium</item>
+    </style>
+
+    <style name="TextAppearance.Default.Bold.Large">
+        <item name="android:textSize">@dimen/text_large</item>
+    </style>
+
+    <style name="TextAppearance.Default.Bold.Large.White">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+</resources>

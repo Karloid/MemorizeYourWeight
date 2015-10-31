@@ -31,4 +31,7 @@
     <string name="remove_all_end">Удалены все %s записи.</string>
     <string name="waist">талия</string>
     <string name="weight">вес</string>
+    <string name="profile">Profile</string>
+    <string name="diet">Diet</string>
+    <string name="memorize">Memorize</string>
 </resources>

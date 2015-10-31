@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@android:id/icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginLeft="16dp"
+        tools:src="@drawable/menu_settings" />
+
+    <TextView
+        android:id="@android:id/text1"
+        style="@style/TextAppearance.Default.Bold.XSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="34dp"
+        tools:text="Navigation Menu Item" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="10dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/notifications_count"
+        style="@style/TextAppearance.Default.Regular.XXXSmall.White"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginRight="24dp"
+        android:background="@drawable/green_circle"
+        android:gravity="center"
+        android:minWidth="24dp"
+        android:visibility="invisible"
+        tools:visibility="visible"
+        tools:text="1" />
+</LinearLayout>

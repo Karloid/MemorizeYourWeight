@@ -1,4 +1,4 @@
-package com.krld.diet.helpers;
+package com.krld.diet.common.helpers;
 
 import android.app.AlertDialog;
 import android.content.Context;

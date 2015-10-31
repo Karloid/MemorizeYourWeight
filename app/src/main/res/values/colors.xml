@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="transparent">@android:color/transparent</color>
+
+    <color name="primary">#00a8ff</color>
+    <color name="primary_600">#0099e6</color>
+    <color name="primary_dark">#0288D1</color>
+    <color name="primary_light">#B3E5FC</color>
+    <color name="accent">#448AFF</color>
+
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#B6B6B6</color>
+
+    <color name="white_1">#fff</color>
+
+    <color name="text_default">#33353a</color>
+    <color name="text_primary_blue">@color/primary</color>
+    <color name="text_primary_light">@color/primary_light</color>
+    <color name="text_secondary">#808ea3</color>
+    <color name="text_white_dim">#cceeff</color>
+    <color name="text_dim">#7a7a7a</color>
+    <color name="text_white">@color/white_1</color>
+
+    <!-- backgrounds -->
+    <color name="message_background_unread">#0a006bff</color>
+    <color name="message_background_unread_2">#1700aaff</color>
+    <color name="white_transparent">#33ffffff</color>
+    <color name="activated_spinner_background">#f2f2f2</color>
+
+    <color name="primary_transparent">#aa00a8ff</color>
+    <color name="userprofile_tint">#7a7a7a</color>
+    <color name="online_color">#00ff96</color>
+    <color name="page_indicator_fill">#ff872f</color>
+    <color name="page_indicator">#dfdfe4</color>
+    <color name="divider_light">#e0e6ee</color>
+
+    <color name="green_1">#8fd741</color>
+    <color name="button_green">@color/green_1</color>
+    <color name="button_green_pressed">#65992e</color>
+    <color name="common_activity_background">#eeeeee</color>
+</resources>

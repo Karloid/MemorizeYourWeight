@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="animation_duration">200</integer>
+    <integer name="meet_people_column_count">3</integer>
+    <integer name="signup_footer_weight">70</integer>
+</resources>

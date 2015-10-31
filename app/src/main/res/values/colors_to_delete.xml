@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--palette-->
+    <color name="blue_1">#2a93fc</color>
+    <color name="blue_2">#83c0f6</color>
+    <color name="blue_3">#cce6ff</color>
+    <color name="blue_4">#d4e9fe</color>
+    <color name="blue_5">#a1abb8</color>
+    <!--highlighted list items-->
+
+    <color name="red_1">#fe7133</color>
+
+    <color name="grey_1">#f2f2f2</color>
+
+    <color name="grey_3">#bcbcbc</color>
+    <color name="grey_4">#f1f6fd</color>
+    <color name="grey_5">#5b5b5b</color>
+    <color name="grey_dark_1">#313131</color>
+
+    <!--text-->
+    <!--buttons-->
+    <color name="button_red">@color/red_1</color>
+
+    <!--backgrounds-->
+    <color name="background_white">@color/white_1</color>
+    <color name="background_white_transparent">#b2ffffff</color>
+    <color name="background_blue_transparent">#b22a93fc</color>
+    <color name="background_grey_1">@color/grey_1</color>
+    <color name="background_grey_2">@color/activated_spinner_background</color>
+    <color name="background_grey_4">@color/grey_4</color>
+    <color name="background_titlebar">@color/blue_1</color>
+    <color name="background_selected_nav_menu_item">@color/blue_1</color>
+    <color name="background_li_selected">@color/blue_4</color>
+    <color name="background_li_menucategory">@color/transparent</color>
+    <color name="background_li_menucategory_pressed">@color/white_1</color>
+    <color name="background_li_menucategory_pressed_accent">@color/blue_1</color>
+    <color name="background_cv_menuitem">@color/white_1</color>
+    <color name="background_cv_menuitem_pressed">@color/blue_4</color>
+    <color name="background_cv_menuitem_hint_normal">@color/blue_1</color>
+    <color name="background_cv_menuitem_hint_nomore">@color/red_1</color>
+    <color name="background_cv_menuitem_hint_unavailable">@color/blue_5</color>
+
+    <!--lines-->
+    <color name="line_1">@color/activated_spinner_background</color>
+    <color name="line_2">@color/grey_3</color>
+    <color name="line_3">#e5e5e5</color>
+
+    <!--misc-->
+    <color name="header_background">#0288D1</color>
+</resources>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/navigation_header_height"
+    android:layout_marginBottom="8dp"
+    android:background="@color/header_background"
+    android:fitsSystemWindows="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@android:id/icon1"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="68dp"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:scaleType="centerCrop"
+        tools:background="@color/red_1" />
+
+    <TextView
+        android:id="@+id/navigation_username"
+        style="@style/TextAppearance.Default.Bold.XSmall.White"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="36dp"
+        android:layout_marginLeft="@dimen/margin_medium"
+        tools:text="Amazing" />
+
+    <TextView
+        android:id="@+id/navigation_email"
+        style="@style/TextAppearance.Default.Bold.XXSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:textColor="@color/text_white_dim"
+        tools:text="some@email.com" />
+
+</FrameLayout>

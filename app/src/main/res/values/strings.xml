@@ -31,4 +31,7 @@
     <string name="label_value">Value</string>
     <string name="label_date">Date</string>
     <string name="label_time">Time</string>
+    <string name="profile">Profile</string>
+    <string name="diet">Diet</string>
+    <string name="memorize">Memorize</string>
 </resources>

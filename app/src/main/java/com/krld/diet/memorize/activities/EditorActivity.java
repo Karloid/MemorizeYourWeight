@@ -27,7 +27,7 @@ import com.krld.diet.R;
 import com.krld.diet.memorize.common.DataType;
 import com.krld.diet.memorize.common.FormatterHelper;
 import com.krld.diet.memorize.common.ListAdapter;
-import com.krld.diet.helpers.DialogHelper;
+import com.krld.diet.common.helpers.DialogHelper;
 import com.krld.diet.memorize.models.Measurement;
 
 import java.io.File;
