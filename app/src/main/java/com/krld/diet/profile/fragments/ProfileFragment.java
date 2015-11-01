@@ -1,8 +1,6 @@
 package com.krld.diet.profile.fragments;
 
-import android.app.Notification;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.AdapterView;
@@ -22,7 +20,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.functions.Action4;
-import rx.observables.BlockingObservable;
 
 public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
 
@@ -32,9 +29,10 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
     @Bind(R.id.age_stub)
     ViewStub ageStub;
 
+    @Bind(R.id.height_stub)
+    ViewStub heightStub;
+
     private Profile profile;
-    private SpinnerViewHolder genderVh;
-    private SpinnerViewHolder ageVh;
     private DataHelper dataHelper;
 
     public static ProfileFragment newInstance() {
@@ -57,26 +55,51 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
 
         setupGender();
         setupAge();
+        setupHeight();
+    }
+
+    private void setupHeight() {
+        SpinnerViewHolder vh = new SpinnerViewHolder();
+        ButterKnife.bind(vh, heightStub.inflate());
+        vh.label.setText(R.string.height);
+
+        List<String> heights = Observable.range(130, 230).map(Object::toString).toList().toBlocking().first();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_right, heights);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
+        vh.value.setAdapter(adapter);
+        if (profile.height == null) {
+            profile.height = 170;
+            dataHelper.save(profile);
+        }
+
+        vh.value.setSelection(heights.indexOf(profile.height.toString()));
+
+        vh.value.setOnItemSelectedListener(new SpinnerListener(
+                (adapterView, view, position, aLong) -> {
+                    profile.height = Integer.valueOf(heights.get(position));
+                    dataHelper.save(profile);
+                }));
     }
 
     private void setupAge() {
-        ageVh = new SpinnerViewHolder();
-        ButterKnife.bind(ageVh, ageStub.inflate());
-        ageVh.label.setText(R.string.age);
+        SpinnerViewHolder vh = new SpinnerViewHolder();
+        ButterKnife.bind(vh, ageStub.inflate());
+        vh.label.setText(R.string.age);
 
         List<String> ages = Observable.range(0, 130).map(Object::toString).toList().toBlocking().first();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_right, ages);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
-        ageVh.value.setAdapter(adapter);
+        vh.value.setAdapter(adapter);
         if (profile.age == null) {
             profile.age = 18;
             dataHelper.save(profile);
         }
 
-        ageVh.value.setSelection(ages.indexOf(profile.age.toString()));
+        vh.value.setSelection(ages.indexOf(profile.age.toString()));
 
-        ageVh.value.setOnItemSelectedListener(new SpinnerListener(
+        vh.value.setOnItemSelectedListener(new SpinnerListener(
                 (adapterView, view, position, aLong) -> {
                     profile.age = Integer.valueOf(ages.get(position));
                     dataHelper.save(profile);
@@ -84,9 +107,9 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
     }
 
     private void setupGender() {
-        genderVh = new SpinnerViewHolder();
-        ButterKnife.bind(genderVh, genderStub.inflate());
-        genderVh.label.setText(R.string.gender);
+        SpinnerViewHolder vh = new SpinnerViewHolder();
+        ButterKnife.bind(vh, genderStub.inflate());
+        vh.label.setText(R.string.gender);
 
         List<String> genders = new ArrayList<>();
         genders.add(getString(R.string.man));
@@ -94,11 +117,11 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_right, genders);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
-        genderVh.value.setAdapter(adapter);
+        vh.value.setAdapter(adapter);
 
-        genderVh.value.setSelection(profile.gender.equals(Profile.Gender.MAN) ? 0 : 1);
+        vh.value.setSelection(profile.gender.equals(Profile.Gender.MAN) ? 0 : 1);
 
-        genderVh.value.setOnItemSelectedListener(new SpinnerListener(
+        vh.value.setOnItemSelectedListener(new SpinnerListener(
                 (adapterView, view, position, aLong) -> {
                     profile.gender = Profile.Gender.values()[position];
                     DataHelper.getInstance().save(profile);

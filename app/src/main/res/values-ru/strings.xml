@@ -38,4 +38,5 @@
     <string name="gender">Gender</string>
     <string name="man">Man</string>
     <string name="woman">Woman</string>
+    <string name="height">Height</string>
 </resources>

@@ -24,11 +24,11 @@
                 style="@style/ProfileSpinnerItem" />
 
             <ViewStub
-                android:id="@+id/stub_height"
+                android:id="@+id/height_stub"
                 style="@style/ProfileSpinnerItem" />
 
             <ViewStub
-                android:id="@+id/stub_bmi"
+                android:id="@+id/bmi_stub"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout="@layout/profile_li_textview" />
