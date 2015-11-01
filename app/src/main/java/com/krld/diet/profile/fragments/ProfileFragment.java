@@ -16,6 +16,7 @@ import com.krld.diet.common.models.Profile;
 import com.krld.diet.memorize.common.FormatterHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -122,17 +123,18 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         ButterKnife.bind(vh, weightStub.inflate());
         vh.label.setText(R.string.weight);
 
-        List<String> weights = Observable.range(30, 190).map(Object::toString).toList().toBlocking().first();
+        List<String> values = Observable.range(30, 190).map(Object::toString).toList().toBlocking().first();
+        Collections.reverse(values);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_right, weights);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_right, values);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
         vh.value.setAdapter(adapter);
 
-        vh.value.setSelection(weights.indexOf(profile.weight.toString()), false);
+        vh.value.setSelection(values.indexOf(profile.weight.toString()), false);
 
         vh.value.setOnItemSelectedListener(new SpinnerListener(
                 (adapterView, view, position, aLong) -> {
-                    profile.weight = Integer.valueOf(weights.get(position));
+                    profile.weight = Integer.valueOf(values.get(position));
                     dataHelper.save(profile);
                 }));
     }
@@ -142,17 +144,18 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         ButterKnife.bind(vh, heightStub.inflate());
         vh.label.setText(R.string.height);
 
-        List<String> heights = Observable.range(130, 230).map(Object::toString).toList().toBlocking().first();
+        List<String> values = Observable.range(130, 230).map(Object::toString).toList().toBlocking().first();
+        Collections.reverse(values);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_right, heights);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_right, values);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
         vh.value.setAdapter(adapter);
 
-        vh.value.setSelection(heights.indexOf(profile.height.toString()), false);
+        vh.value.setSelection(values.indexOf(profile.height.toString()), false);
 
         vh.value.setOnItemSelectedListener(new SpinnerListener(
                 (adapterView, view, position, aLong) -> {
-                    profile.height = Integer.valueOf(heights.get(position));
+                    profile.height = Integer.valueOf(values.get(position));
                     dataHelper.save(profile);
                 }));
     }
@@ -162,9 +165,10 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         ButterKnife.bind(vh, ageStub.inflate());
         vh.label.setText(R.string.age);
 
-        List<String> ages = Observable.range(0, 130).map(Object::toString).toList().toBlocking().first();
+        List<String> values = Observable.range(0, 130).map(Object::toString).toList().toBlocking().first();
+        Collections.reverse(values);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_right, ages);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_right, values);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
         vh.value.setAdapter(adapter);
         if (profile.age == null) {
@@ -172,11 +176,11 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
             dataHelper.save(profile);
         }
 
-        vh.value.setSelection(ages.indexOf(profile.age.toString()), false);
+        vh.value.setSelection(values.indexOf(profile.age.toString()), false);
 
         vh.value.setOnItemSelectedListener(new SpinnerListener(
                 (adapterView, view, position, aLong) -> {
-                    profile.age = Integer.valueOf(ages.get(position));
+                    profile.age = Integer.valueOf(values.get(position));
                     dataHelper.save(profile);
                 }));
     }
@@ -187,8 +191,8 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         vh.label.setText(R.string.gender);
 
         List<String> genders = new ArrayList<>();
-        genders.add(getString(R.string.man));
-        genders.add(getString(R.string.woman));
+        genders.add(getString(Profile.Gender.MAN.locString));
+        genders.add(getString(Profile.Gender.WOMAN.locString));
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_right, genders);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
