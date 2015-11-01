@@ -43,4 +43,5 @@
     <string name="lifestyle_normal">Normal</string>
     <string name="lifestyle_passive">Passive</string>
     <string name="lifestyle">Lifestyle</string>
+    <string name="bmi">BMI</string>
 </resources>

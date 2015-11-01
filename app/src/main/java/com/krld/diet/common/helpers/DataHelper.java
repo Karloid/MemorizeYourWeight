@@ -11,13 +11,19 @@ import com.krld.diet.R;
 import com.krld.diet.common.models.DataStore;
 import com.krld.diet.common.models.Profile;
 
+import rx.subjects.BehaviorSubject;
+
+
 public class DataHelper {
     public static final String KEY_DATA_STORE = "data_store";
     private static DataHelper instance;
     private final SharedPreferences sharedPrefs;
 
+    private BehaviorSubject<DataStore> updatedProfileObs;
+
     private DataHelper() {
         sharedPrefs = Application.getInstance().getSharedPrefs();
+        updatedProfileObs = BehaviorSubject.create();
     }
 
     public synchronized static DataHelper getInstance() {
@@ -63,6 +69,12 @@ public class DataHelper {
     public void save(Profile profile) {
         DataStore ds = getDataStore();
         ds.profile = profile;
+        profile.calcBMI();
         save(ds);
+        updatedProfileObs.onNext(ds);
+    }
+
+    public BehaviorSubject<DataStore> getUpdatedProfileObs() {
+        return updatedProfileObs;
     }
 }

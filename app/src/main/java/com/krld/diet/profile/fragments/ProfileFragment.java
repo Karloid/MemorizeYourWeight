@@ -11,7 +11,9 @@ import android.widget.TextView;
 import com.krld.diet.R;
 import com.krld.diet.base.fragments.BaseDrawerToggleToolbarFragment;
 import com.krld.diet.common.helpers.DataHelper;
+import com.krld.diet.common.models.DataStore;
 import com.krld.diet.common.models.Profile;
+import com.krld.diet.memorize.common.FormatterHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +21,13 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Action4;
+import rx.schedulers.Schedulers;
+
+import static rx.android.schedulers.AndroidSchedulers.*;
+import static rx.schedulers.Schedulers.*;
 
 public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
 
@@ -37,6 +45,9 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
 
     @Bind(R.id.lifestyle_stub)
     ViewStub lifestyleStub;
+
+    @Bind(R.id.bmi_stub)
+    ViewStub bmiStub;
 
     private Profile profile;
     private DataHelper dataHelper;
@@ -64,6 +75,25 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         setupHeight();
         setupWeight();
         setupLifeStyle();
+        setupBMI();
+    }
+
+    private void setupBMI() {
+        TextViewHolder vh = new TextViewHolder();
+        ButterKnife.bind(vh, bmiStub.inflate());
+        vh.label.setText(R.string.bmi);
+
+        Action1<Profile> bind = profile -> {
+            vh.value.setText(FormatterHelper.formatDouble(profile.bmi));
+            vh.value.setTextColor(getResources().getColor(profile.bmiCategory.color));
+        };
+        bind.call(profile);
+        compositeSubscriptionCreated.add(
+                dataHelper.getUpdatedProfileObs()
+                        .subscribeOn(io())
+                        .map(dataStore -> profile)
+                        .observeOn(mainThread())
+                        .subscribe(bind));
     }
 
     private void setupLifeStyle() {
@@ -77,7 +107,7 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
         vh.value.setAdapter(adapter);
 
-        vh.value.setSelection(values.indexOf(getString(profile.lifeStyle.descriptionResId)));
+        vh.value.setSelection(values.indexOf(getString(profile.lifeStyle.descriptionResId)), false);
 
         vh.value.setOnItemSelectedListener(new SpinnerListener(
                 (adapterView, view, position, aLong) -> {
@@ -98,7 +128,7 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
         vh.value.setAdapter(adapter);
 
-        vh.value.setSelection(weights.indexOf(profile.weight.toString()));
+        vh.value.setSelection(weights.indexOf(profile.weight.toString()), false);
 
         vh.value.setOnItemSelectedListener(new SpinnerListener(
                 (adapterView, view, position, aLong) -> {
@@ -118,7 +148,7 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
         vh.value.setAdapter(adapter);
 
-        vh.value.setSelection(heights.indexOf(profile.height.toString()));
+        vh.value.setSelection(heights.indexOf(profile.height.toString()), false);
 
         vh.value.setOnItemSelectedListener(new SpinnerListener(
                 (adapterView, view, position, aLong) -> {
@@ -142,7 +172,7 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
             dataHelper.save(profile);
         }
 
-        vh.value.setSelection(ages.indexOf(profile.age.toString()));
+        vh.value.setSelection(ages.indexOf(profile.age.toString()), false);
 
         vh.value.setOnItemSelectedListener(new SpinnerListener(
                 (adapterView, view, position, aLong) -> {
@@ -164,7 +194,7 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
         vh.value.setAdapter(adapter);
 
-        vh.value.setSelection(profile.gender.equals(Profile.Gender.MAN) ? 0 : 1);
+        vh.value.setSelection(profile.gender.equals(Profile.Gender.MAN) ? 0 : 1, false);
 
         vh.value.setOnItemSelectedListener(new SpinnerListener(
                 (adapterView, view, position, aLong) -> {
@@ -198,5 +228,13 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
         }
+    }
+
+    public class TextViewHolder {
+        @Bind(R.id.textview_label)
+        TextView label;
+
+        @Bind(R.id.textview_value)
+        TextView value;
     }
 }

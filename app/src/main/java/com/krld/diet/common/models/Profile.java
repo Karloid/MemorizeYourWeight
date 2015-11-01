@@ -8,6 +8,8 @@ public class Profile {
     public Integer height;
     public Integer weight;
     public LifeStyle lifeStyle;
+    public float bmi;
+    public BMI bmiCategory;
 
     public static Profile create() {
         Profile profile = new Profile();
@@ -42,6 +44,11 @@ public class Profile {
         return isChanged;
     }
 
+    public void calcBMI() {
+        bmi = (float) (weight / Math.pow(height / 100f, 2));
+        bmiCategory = BMI.getByValue(bmi);
+    }
+
     public enum Gender {
         MAN(R.string.man),
         WOMAN(R.string.woman),;
@@ -57,14 +64,40 @@ public class Profile {
     public enum LifeStyle {
         ACTIVE(R.string.lifestyle_active),
         NORMAL(R.string.lifestyle_normal),
-        PASSIVE(R.string.lifestyle_passive),
-        ;
+        PASSIVE(R.string.lifestyle_passive),;
 
         public int descriptionResId;
 
         LifeStyle(int descriptionResId) {
 
             this.descriptionResId = descriptionResId;
+        }
+    }
+
+    public enum BMI {
+        LOW(0, 18.5f, R.color.red_1),
+        NORMAL(18.5f, 24.9f, R.color.green_1),
+        HIGH(24.9f, 1000f, R.color.red_1),;
+
+        private final float bot;
+        private final float top;
+        public final int color;
+
+        BMI(float bot, float top, int color) {
+            this.bot = bot;
+            this.top = top;
+            this.color = color;
+        }
+
+        public static BMI getByValue(float value) {
+            for (BMI b : values()) {
+                if (b.top >= value
+                        &&
+                        b.bot <= value) {
+                    return b;
+                }
+            }
+            return null;
         }
     }
 }
