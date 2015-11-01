@@ -1,5 +1,6 @@
 package com.krld.diet.profile.fragments;
 
+import android.app.Notification;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewStub;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.functions.Action4;
 
 public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
 
@@ -73,18 +75,11 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
 
         genderVh.value.setSelection(profile.gender.equals(Profile.Gender.MAN) ? 0 : 1);
 
-        genderVh.value.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                profile.gender = Profile.Gender.values()[position];
-                DataHelper.getInstance().save(profile);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        genderVh.value.setOnItemSelectedListener(new SpinnerListener(
+                (adapterView, view, position, aLong) -> {
+                    profile.gender = Profile.Gender.values()[position];
+                    DataHelper.getInstance().save(profile);
+                }));
     }
 
     public class SpinnerViewHolder {
@@ -95,5 +90,22 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         @Bind(R.id.spinner_value)
         Spinner value;
 
+    }
+
+    private class SpinnerListener implements AdapterView.OnItemSelectedListener {
+        private Action4<AdapterView, View, Integer, Long> callback;
+
+        public SpinnerListener(Action4<AdapterView, View, Integer, Long> callback) {
+            this.callback = callback;
+        }
+
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            callback.call(parent, view, position, id);
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+        }
     }
 }
