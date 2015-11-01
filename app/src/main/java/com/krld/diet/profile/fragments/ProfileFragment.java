@@ -3,12 +3,15 @@ package com.krld.diet.profile.fragments;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewStub;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.krld.diet.R;
 import com.krld.diet.base.fragments.BaseDrawerToggleToolbarFragment;
+import com.krld.diet.common.helpers.DataHelper;
+import com.krld.diet.common.models.Profile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,7 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
     ViewStub ageStub;
 
     private SpinnerViewHolder genderVh;
+    private Profile profile;
 
     public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
@@ -39,6 +43,9 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         super.onViewCreated(view, savedInstanceState);
 
         mToolbar.setTitle(R.string.profile);
+
+
+        profile = DataHelper.getInstance().getProfile();
 
         setupGender();
         setupAge();
@@ -63,7 +70,21 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_right, genders);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
         genderVh.value.setAdapter(adapter);
-      //  genderVh.value.setSelection(ages.indexOf(currentValue));
+
+        genderVh.value.setSelection(profile.gender.equals(Profile.Gender.MAN) ? 0 : 1);
+
+        genderVh.value.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                profile.gender = Profile.Gender.values()[position];
+                DataHelper.getInstance().save(profile);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     public class SpinnerViewHolder {

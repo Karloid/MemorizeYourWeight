@@ -1,6 +1,7 @@
 package com.krld.diet;
 
 
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -83,4 +84,7 @@ public class Application extends android.app.Application {
         return getForegroundActivitiesCountObs().getValue() != 0;
     }
 
+    public SharedPreferences getSharedPrefs() {
+        return getSharedPreferences("DEFAULT_SHARED_PREFS", MODE_PRIVATE);
+    }
 }
