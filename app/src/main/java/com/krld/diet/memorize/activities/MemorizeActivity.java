@@ -10,7 +10,7 @@ import android.widget.Toast;
 import com.krld.diet.R;
 import com.krld.diet.memorize.common.DataType;
 
-public class MenuActivity extends Activity {
+public class MemorizeActivity extends Activity {
     public static final String DATATYPE = "datatype";
     private Button weightButton;
     private Button waistButton;

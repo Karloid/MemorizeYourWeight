@@ -8,12 +8,19 @@
         android:icon="@drawable/sql_icon"
         android:label="@string/app_name"
         android:name="com.krld.diet.Application"
+        android:theme="@style/AppTheme"
          >
         <activity android:name="com.krld.diet.memorize.activities.EditorActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name">
         </activity>
-        <activity android:name="com.krld.diet.memorize.activities.MenuActivity"
+        <activity android:name=".memorize.activities.MemorizeActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name">
+
+        </activity>
+
+        <activity android:name="com.krld.diet.main.activities.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name">
             <intent-filter>

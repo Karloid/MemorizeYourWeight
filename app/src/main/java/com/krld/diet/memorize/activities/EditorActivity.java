@@ -56,7 +56,7 @@ public class EditorActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_editor);
-        datatype = DataType.valueOf(getIntent().getStringExtra(MenuActivity.DATATYPE));
+        datatype = DataType.valueOf(getIntent().getStringExtra(MemorizeActivity.DATATYPE));
         initTitle();
         initViews();
         refreshListView();
