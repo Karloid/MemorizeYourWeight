@@ -35,6 +35,10 @@ public class DataHelper {
             save(dataStore);
             return dataStore.profile;
         }
+        if (profile.init()) {
+            save(profile);
+        }
+
         return profile;
     }
 

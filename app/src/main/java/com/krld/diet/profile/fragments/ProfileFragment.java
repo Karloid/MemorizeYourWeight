@@ -32,6 +32,12 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
     @Bind(R.id.height_stub)
     ViewStub heightStub;
 
+    @Bind(R.id.weight_stub)
+    ViewStub weightStub;
+
+    @Bind(R.id.lifestyle_stub)
+    ViewStub lifestyleStub;
+
     private Profile profile;
     private DataHelper dataHelper;
 
@@ -56,6 +62,49 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         setupGender();
         setupAge();
         setupHeight();
+        setupWeight();
+        setupLifeStyle();
+    }
+
+    private void setupLifeStyle() {
+        SpinnerViewHolder vh = new SpinnerViewHolder();
+        ButterKnife.bind(vh, lifestyleStub.inflate());
+        vh.label.setText(R.string.lifestyle);
+
+        List<String> values = Observable.from(Profile.LifeStyle.values()).map(lifeStyle -> getString(lifeStyle.descriptionResId)).toList().toBlocking().first();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_right, values);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
+        vh.value.setAdapter(adapter);
+
+        vh.value.setSelection(values.indexOf(getString(profile.lifeStyle.descriptionResId)));
+
+        vh.value.setOnItemSelectedListener(new SpinnerListener(
+                (adapterView, view, position, aLong) -> {
+                    profile.lifeStyle = Profile.LifeStyle.values()[position];
+                    DataHelper.getInstance().save(profile);
+                }));
+
+    }
+
+    private void setupWeight() {
+        SpinnerViewHolder vh = new SpinnerViewHolder();
+        ButterKnife.bind(vh, weightStub.inflate());
+        vh.label.setText(R.string.weight);
+
+        List<String> weights = Observable.range(30, 190).map(Object::toString).toList().toBlocking().first();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_right, weights);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
+        vh.value.setAdapter(adapter);
+
+        vh.value.setSelection(weights.indexOf(profile.weight.toString()));
+
+        vh.value.setOnItemSelectedListener(new SpinnerListener(
+                (adapterView, view, position, aLong) -> {
+                    profile.weight = Integer.valueOf(weights.get(position));
+                    dataHelper.save(profile);
+                }));
     }
 
     private void setupHeight() {
@@ -68,10 +117,6 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_right, heights);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
         vh.value.setAdapter(adapter);
-        if (profile.height == null) {
-            profile.height = 170;
-            dataHelper.save(profile);
-        }
 
         vh.value.setSelection(heights.indexOf(profile.height.toString()));
 

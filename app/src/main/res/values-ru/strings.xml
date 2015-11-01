@@ -39,4 +39,8 @@
     <string name="man">Man</string>
     <string name="woman">Woman</string>
     <string name="height">Height</string>
+    <string name="lifestyle_active">Active</string>
+    <string name="lifestyle_normal">Normal</string>
+    <string name="lifestyle_passive">Passive</string>
+    <string name="lifestyle">Lifestyle</string>
 </resources>

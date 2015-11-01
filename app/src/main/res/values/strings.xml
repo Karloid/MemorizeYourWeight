@@ -7,7 +7,7 @@
     <string name="hips_button">Hips</string>
     <string name="waist">waist</string>
     <string name="hips">hips</string>
-    <string name="weight">weight</string>
+    <string name="weight">Weight(kg)</string>
     <string name="menu_button_clicked_toast">Open %s editor</string>
     <string name="label_editor">editor</string>
     <string name="label_import">Import</string>
@@ -39,4 +39,8 @@
     <string name="man">Man</string>
     <string name="woman">Woman</string>
     <string name="height">Height(cm)</string>
+    <string name="lifestyle_active">Active</string>
+    <string name="lifestyle_normal">Normal</string>
+    <string name="lifestyle_passive">Passive</string>
+    <string name="lifestyle">Lifestyle</string>
 </resources>

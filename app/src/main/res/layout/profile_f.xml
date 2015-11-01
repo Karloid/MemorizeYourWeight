@@ -26,6 +26,9 @@
             <ViewStub
                 android:id="@+id/height_stub"
                 style="@style/ProfileSpinnerItem" />
+            <ViewStub
+                android:id="@+id/weight_stub"
+                style="@style/ProfileSpinnerItem" />
 
             <ViewStub
                 android:id="@+id/bmi_stub"
@@ -34,8 +37,10 @@
                 android:layout="@layout/profile_li_textview" />
 
             <ViewStub
-                android:id="@+id/stub_weight"
+                android:id="@+id/lifestyle_stub"
                 style="@style/ProfileSpinnerItem" />
+
+
 
         </LinearLayout>
 
