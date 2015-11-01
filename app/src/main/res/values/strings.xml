@@ -34,4 +34,8 @@
     <string name="profile">Profile</string>
     <string name="diet">Diet</string>
     <string name="memorize">Memorize</string>
+    <string name="age">Age</string>
+    <string name="gender">Gender</string>
+    <string name="man">Man</string>
+    <string name="woman">Woman</string>
 </resources>
