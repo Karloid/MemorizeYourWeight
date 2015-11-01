@@ -2,6 +2,7 @@ package com.krld.diet.profile.fragments;
 
 import android.app.Notification;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.AdapterView;
@@ -19,7 +20,9 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Observable;
 import rx.functions.Action4;
+import rx.observables.BlockingObservable;
 
 public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
 
@@ -29,8 +32,10 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
     @Bind(R.id.age_stub)
     ViewStub ageStub;
 
-    private SpinnerViewHolder genderVh;
     private Profile profile;
+    private SpinnerViewHolder genderVh;
+    private SpinnerViewHolder ageVh;
+    private DataHelper dataHelper;
 
     public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
@@ -47,23 +52,41 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         mToolbar.setTitle(R.string.profile);
 
 
-        profile = DataHelper.getInstance().getProfile();
+        dataHelper = DataHelper.getInstance();
+        profile = dataHelper.getProfile();
 
         setupGender();
         setupAge();
-
-        genderVh.label.setText(R.string.gender);
-
-        ageStub.inflate();
     }
 
     private void setupAge() {
+        ageVh = new SpinnerViewHolder();
+        ButterKnife.bind(ageVh, ageStub.inflate());
+        ageVh.label.setText(R.string.age);
 
+        List<String> ages = Observable.range(0, 130).map(Object::toString).toList().toBlocking().first();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_right, ages);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
+        ageVh.value.setAdapter(adapter);
+        if (profile.age == null) {
+            profile.age = 18;
+            dataHelper.save(profile);
+        }
+
+        ageVh.value.setSelection(ages.indexOf(profile.age.toString()));
+
+        ageVh.value.setOnItemSelectedListener(new SpinnerListener(
+                (adapterView, view, position, aLong) -> {
+                    profile.age = Integer.valueOf(ages.get(position));
+                    dataHelper.save(profile);
+                }));
     }
 
     private void setupGender() {
         genderVh = new SpinnerViewHolder();
         ButterKnife.bind(genderVh, genderStub.inflate());
+        genderVh.label.setText(R.string.gender);
 
         List<String> genders = new ArrayList<>();
         genders.add(getString(R.string.man));
