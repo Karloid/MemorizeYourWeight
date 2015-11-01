@@ -41,10 +41,15 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         mToolbar.setTitle(R.string.profile);
 
         setupGender();
+        setupAge();
 
         genderVh.label.setText(R.string.gender);
 
         ageStub.inflate();
+    }
+
+    private void setupAge() {
+
     }
 
     private void setupGender() {
@@ -55,8 +60,8 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         genders.add(getString(R.string.man));
         genders.add(getString(R.string.woman));
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_li, genders);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_right, genders);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
         genderVh.value.setAdapter(adapter);
       //  genderVh.value.setSelection(ages.indexOf(currentValue));
     }
