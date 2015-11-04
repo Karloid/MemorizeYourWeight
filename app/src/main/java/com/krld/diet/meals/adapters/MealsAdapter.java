@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.krld.diet.R;
+import com.krld.diet.base.fragments.BaseFragment;
+import com.krld.diet.common.helpers.IntentHelper;
 import com.krld.diet.common.models.Meal;
 
 import java.util.ArrayList;
@@ -19,9 +21,11 @@ import rx.functions.Func2;
 public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractViewHolder> {
 
     private List<ListItem> items;
+    private BaseFragment fragment;
 
-    public MealsAdapter() {
+    public MealsAdapter(BaseFragment fragment) {
         super();
+        this.fragment = fragment;
         items = new ArrayList<>();
         items.add(new ListItem(Type.HEADER));
         items.add(new ListItem(Type.MEAL, Meal.BREAKFAST));
@@ -54,6 +58,10 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
         return items.get(position).type.id;
     }
 
+    public BaseFragment getFragment() {
+        return fragment;
+    }
+
     protected static class MealViewHolder extends AbstractViewHolder {
         @Bind(R.id.meal)
         TextView mealView;
@@ -72,7 +80,7 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
 
         public MealViewHolder(View itemView, MealsAdapter adapter) {
             super(itemView, adapter);
-            itemView.setOnClickListener(v -> {});
+            itemView.setOnClickListener(v -> IntentHelper.showMeal(adapter.getFragment().getActivity(), listItem.meal));
         }
 
         @Override

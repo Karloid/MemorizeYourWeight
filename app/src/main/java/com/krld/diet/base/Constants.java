@@ -36,4 +36,5 @@ public class Constants {
 
 
     public static final String EXTRA_SHOW_USER_PROFILE = "extra show user profile";
+    public static final String EXTRA_MEAL = "extra_meal";
 }

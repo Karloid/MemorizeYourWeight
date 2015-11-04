@@ -1,5 +1,6 @@
 package com.krld.diet.common.helpers;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 
@@ -49,5 +50,25 @@ public class FLog {
 
     public static void i(String string) {
         output(i, string);
+    }
+
+    public static void d(Object object, String string) {
+        d(addClassName(object, string));
+    }
+    public static void e(Object object, String string) {
+        e(addClassName(object, string));
+    }
+
+    public static void w(Object object, String string) {
+        w(addClassName(object, string));
+    }
+
+    public static void i(Object object, String string) {
+        i(addClassName(object, string));
+    }
+
+    @NonNull
+    private static String addClassName(Object object, String string) {
+        return (object != null ? object.getClass().getSimpleName() + " " : "") + string;
     }
 }
