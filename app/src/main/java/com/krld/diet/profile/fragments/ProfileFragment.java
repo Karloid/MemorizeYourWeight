@@ -67,7 +67,6 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
 
         mToolbar.setTitle(R.string.profile);
 
-
         dataHelper = DataHelper.getInstance();
         profile = dataHelper.getProfile();
 
