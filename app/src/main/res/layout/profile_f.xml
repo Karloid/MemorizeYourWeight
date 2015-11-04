@@ -47,4 +47,6 @@
     </ScrollView>
 
     <include layout="@layout/toolbar_base" />
+
+    <include layout="@layout/toolbar_shadow" />
 </FrameLayout>

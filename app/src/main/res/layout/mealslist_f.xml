@@ -10,4 +10,6 @@
         android:layout_height="match_parent"/>
 
     <include layout="@layout/toolbar_base" />
+
+    <include layout="@layout/toolbar_shadow" />
 </FrameLayout>
