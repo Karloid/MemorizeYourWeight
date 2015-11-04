@@ -16,7 +16,7 @@
 
     <EditText
         android:id="@+id/product"
-        style="@style/Table.TextView.EditText"
+        style="@style/Table.TextView.EditTextNumber"
         android:gravity="left|center_vertical"
         android:inputType="text"
         tools:text="Dinner"
@@ -24,22 +24,22 @@
 
     <EditText
         android:id="@+id/proteins"
-        style="@style/Table.TextView.EditText"
+        style="@style/Table.TextView.EditTextNumber"
         tools:text="22" />
 
     <EditText
         android:id="@+id/fats"
-        style="@style/Table.TextView.EditText"
+        style="@style/Table.TextView.EditTextNumber"
         tools:text="66" />
 
     <EditText
         android:id="@+id/carbs"
-        style="@style/Table.TextView.EditText"
+        style="@style/Table.TextView.EditTextNumber"
         tools:text="44" />
 
     <EditText
         android:id="@+id/weight"
-        style="@style/Table.TextView.EditText"
+        style="@style/Table.TextView.EditTextNumber"
         tools:text="40" />
 
     <TextView
