@@ -28,11 +28,17 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
         this.fragment = fragment;
         items = new ArrayList<>();
         items.add(new ListItem(Type.HEADER));
+        items.add(new ListItem(Type.DIVIDER));
         items.add(new ListItem(Type.MEAL, Meal.BREAKFAST));
+        items.add(new ListItem(Type.DIVIDER));
         items.add(new ListItem(Type.MEAL, Meal.TIFFIN));
+        items.add(new ListItem(Type.DIVIDER));
         items.add(new ListItem(Type.MEAL, Meal.LUNCH));
+        items.add(new ListItem(Type.DIVIDER));
         items.add(new ListItem(Type.MEAL, Meal.AFTERNOON_SNACK));
+        items.add(new ListItem(Type.DIVIDER));
         items.add(new ListItem(Type.MEAL, Meal.DINNER));
+        items.add(new ListItem(Type.DIVIDER));
         items.add(new ListItem(Type.FOOTER));
     }
 
@@ -158,7 +164,8 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
     private enum Type {
         HEADER(R.layout.meals_li_header, HeaderViewHolder::new),
         MEAL(R.layout.meals_li_meal, MealViewHolder::new),
-        FOOTER(R.layout.meals_li_footer, FooterViewHolder::new),;
+        FOOTER(R.layout.meals_li_footer, FooterViewHolder::new),
+        DIVIDER(R.layout.meals_li_divider, AbstractViewHolder::new),;
         public Func2<View, MealsAdapter, AbstractViewHolder> createVH;
         public int id;
         public int layoutId;

@@ -35,13 +35,15 @@ public class BaseDrawerToggleToolbarFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         setupActionBarDrawerToggle();
 
-     /*   notificationCircle = getView().findViewById(R.id.notifications_circle);
+        //   notificationCircle = getView().findViewById(R.id.notifications_circle);
         if (!(getActivity() instanceof MainActivity)) {
             showNavIconAsBackArrow(v -> ((BaseNavDrawerActivity) getActivity()).toolbarBackPressed());
+
             if (notificationCircle != null) {
                 notificationCircle.setVisibility(View.INVISIBLE);
             }
         } else {
+/*
             if (notificationCircle != null) {
                 Observable.combineLatest(DBHelper.getInstance().getUnreadMessagesCount(),
                         mFragmentVisibleObservable,
@@ -56,7 +58,8 @@ public class BaseDrawerToggleToolbarFragment extends BaseFragment {
                                 notificationCircle.setVisibility(isVisible ? View.VISIBLE : View.GONE);
                         });
             }
-        }*/
+*/
+        }
     }
 
     protected void setupActionBarDrawerToggle() {
