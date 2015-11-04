@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">memorize</string>
     <string name="DelButtonCaption">Delete record</string>
     <string name="weight_button">Weight</string>
     <string name="weist_button">Weist</string>

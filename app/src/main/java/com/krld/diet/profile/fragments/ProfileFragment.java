@@ -115,7 +115,7 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
                     profile.lifeStyle = Profile.LifeStyle.values()[position];
                     DataHelper.getInstance().save(profile);
                 }));
-
+        ((View)vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());
     }
 
     private void setupWeight() {
@@ -137,6 +137,7 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
                     profile.weight = Integer.valueOf(values.get(position));
                     dataHelper.save(profile);
                 }));
+        ((View)vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());
     }
 
     private void setupHeight() {
@@ -158,6 +159,7 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
                     profile.height = Integer.valueOf(values.get(position));
                     dataHelper.save(profile);
                 }));
+        ((View)vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());
     }
 
     private void setupAge() {
@@ -183,6 +185,7 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
                     profile.age = Integer.valueOf(values.get(position));
                     dataHelper.save(profile);
                 }));
+        ((View)vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());
     }
 
     private void setupGender() {
@@ -205,6 +208,8 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
                     profile.gender = Profile.Gender.values()[position];
                     DataHelper.getInstance().save(profile);
                 }));
+
+        ((View)vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());
     }
 
     public class SpinnerViewHolder {
