@@ -2,6 +2,7 @@ package com.krld.diet.base.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -50,6 +51,14 @@ public abstract class BaseFragment extends DialogFragment {
             mFragmentLayoutId = savedInstanceState.getInt(LAYOUT_ID_ARGUMENT, mFragmentLayoutId);
         }
         createRxStuff();
+
+        //noinspection ResourceType
+        getActivity().setRequestedOrientation(
+                getScreenOrientation());
+    }
+
+    protected int getScreenOrientation() {
+        return ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR;
     }
 
     private void createRxStuff() {
