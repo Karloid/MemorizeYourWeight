@@ -13,7 +13,7 @@
     <dimen name="separator_thickness_fat">2dp</dimen>
 
     <dimen name="text_xxxsmall">12sp</dimen>
-    <dimen name="text_xxsmall">14sp</dimen>
+    <dimen name="text_xxsmall">13sp</dimen>
     <dimen name="text_xsmall">16sp</dimen>
     <dimen name="text_small">18sp</dimen>
 
@@ -54,5 +54,6 @@
     <dimen name="people_card_vert_margin">0dp</dimen>
     <dimen name="people_card_horiz_margin">1dp</dimen>
     <dimen name="header_height">56dp</dimen>
+    <dimen name="meal_height">48dp</dimen>
 
 </resources>

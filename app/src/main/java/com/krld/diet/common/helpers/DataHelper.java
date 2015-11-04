@@ -36,10 +36,9 @@ public class DataHelper {
     public synchronized Profile getProfile() {
         Profile profile = getDataStore().profile;
         if (profile == null) {
-            DataStore dataStore = getDataStore();
-            dataStore.profile = Profile.create();
-            save(dataStore);
-            return dataStore.profile;
+            profile = Profile.create();
+            save(profile);
+            return profile;
         }
         if (profile.init()) {
             save(profile);

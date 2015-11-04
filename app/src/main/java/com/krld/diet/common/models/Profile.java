@@ -8,7 +8,7 @@ public class Profile {
     public Integer height;
     public Integer weight;
     public LifeStyle lifeStyle;
-    public float bmi;
+    public Float bmi;
     public BMI bmiCategory;
 
     public static Profile create() {
@@ -35,9 +35,12 @@ public class Profile {
             weight = 60;
             isChanged = true;
         }
-
         if (lifeStyle == null) {
             lifeStyle = LifeStyle.NORMAL;
+            isChanged = true;
+        }
+        if (bmi == null) {
+            calcBMI();
             isChanged = true;
         }
 

@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.krld.diet.R;
 import com.krld.diet.common.models.Meal;
@@ -11,6 +12,7 @@ import com.krld.diet.common.models.Meal;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.functions.Func2;
 
@@ -39,7 +41,7 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
 
     @Override
     public void onBindViewHolder(AbstractViewHolder holder, int position) {
-        holder.bind(items.get(position), position);
+        holder.onBind(items.get(position), position);
     }
 
     @Override
@@ -52,9 +54,35 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
         return items.get(position).type.id;
     }
 
-    private static class MealViewHolder extends AbstractViewHolder {
+    protected static class MealViewHolder extends AbstractViewHolder {
+        @Bind(R.id.meal)
+        TextView mealView;
+
+        @Bind(R.id.proteins)
+        TextView proteinsView;
+
+        @Bind(R.id.fats)
+        TextView fatsView;
+
+        @Bind(R.id.carbs)
+        TextView carbsView;
+
+        @Bind(R.id.calories)
+        TextView caloriesView;
+
         public MealViewHolder(View itemView, MealsAdapter adapter) {
             super(itemView, adapter);
+            itemView.setOnClickListener(v -> {});
+        }
+
+        @Override
+        public void onBind(ListItem listItem, int position) {
+            super.onBind(listItem, position);
+            mealView.setText(listItem.meal.nameLocResId);
+            proteinsView.setText("100/300");
+            fatsView.setText("200/500");
+            carbsView.setText("300/300");
+            caloriesView.setText("400/300");
         }
     }
 
@@ -71,9 +99,9 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
     }
 
     public static class AbstractViewHolder extends RecyclerView.ViewHolder {
-        private final MealsAdapter adapter;
-        private ListItem listItem;
-        private int position;
+        protected final MealsAdapter adapter;
+        protected ListItem listItem;
+        protected int position;
 
         public AbstractViewHolder(View itemView, MealsAdapter adapter) {
             super(itemView);
@@ -81,8 +109,7 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
             ButterKnife.bind(this, itemView);
         }
 
-        public void bind(ListItem listItem, int position) {
-
+        public void onBind(ListItem listItem, int position) {
             this.listItem = listItem;
             this.position = position;
         }
@@ -105,9 +132,9 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
     }
 
     private enum Type {
-        MEAL(R.layout.meals_li_header, MealViewHolder::new),
-        FOOTER(R.layout.meals_li_header, FooterViewHolder::new),
-        HEADER(R.layout.meals_li_header, HeaderViewHolder::new);
+        HEADER(R.layout.meals_li_header, HeaderViewHolder::new),
+        MEAL(R.layout.meals_li_meal, MealViewHolder::new),
+        FOOTER(R.layout.meals_li_footer, FooterViewHolder::new),;
         public Func2<View, MealsAdapter, AbstractViewHolder> createVH;
         public int id;
         public int layoutId;
