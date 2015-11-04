@@ -45,9 +45,9 @@
     <string name="bmi">BMI</string>
     <string name="meals">Meals</string>
     <string name="meal">Meal</string>
-    <string name="proteins">Proteins</string>
-    <string name="fats">Fats</string>
-    <string name="carbs">Carbs</string>
+    <string name="proteins">Proteins(g)</string>
+    <string name="fats">Fats(g)</string>
+    <string name="carbs">Carbs(g)</string>
     <string name="calories">Calories</string>
     <string name="tiffin">Tiffin</string>
     <string name="dinner">Dinner</string>
@@ -55,4 +55,7 @@
     <string name="afternoon_snack">Afternoon Snack</string>
     <string name="lunch">Lunch</string>
     <string name="totals">Totals</string>
+    <string name="add_new_product">+ Add New Product</string>
+    <string name="weight_g">Weight(g)</string>
+    <string name="product">Product</string>
 </resources>

@@ -16,6 +16,7 @@ import com.krld.diet.common.helpers.FLog;
 import com.krld.diet.common.helpers.MetricsHelper;
 import com.krld.diet.common.models.Meal;
 import com.krld.diet.meals.adapters.MealsAdapter;
+import com.krld.diet.meals.adapters.ProductsAdapter;
 
 import butterknife.Bind;
 
@@ -58,6 +59,6 @@ public class MealFragment extends BaseDrawerToggleToolbarFragment {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        // recyclerView.setAdapter(new MealsAdapter(this));
+        recyclerView.setAdapter(new ProductsAdapter(this));
     }
 }

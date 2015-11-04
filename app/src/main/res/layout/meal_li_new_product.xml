@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/margin_large"
+    android:paddingRight="@dimen/margin_large">
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="@dimen/meal_height"
+        tools:ignore="Suspicious0dp" />
+
+    <TextView
+        android:id="@+id/meal"
+        style="@style/MealsTable.Meal"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:gravity="left"
+        android:textColor="@color/text_primary_blue"
+        android:text="@string/add_new_product" />
+
+</LinearLayout>

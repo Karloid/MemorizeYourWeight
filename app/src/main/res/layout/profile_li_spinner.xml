@@ -23,7 +23,7 @@
     <Spinner
         android:id="@+id/spinner_value"
         style="@style/TextAppearance.Default.Regular.Small"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="18dp"
         android:layout_marginRight="4dp"

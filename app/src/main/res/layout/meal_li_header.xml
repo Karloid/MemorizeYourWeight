@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/margin_large"
+    android:paddingRight="@dimen/margin_large">
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="@dimen/header_height"
+        tools:ignore="Suspicious0dp" />
+
+    <TextView
+        style="@style/MealTable.Header"
+        android:gravity="left"
+        android:text="@string/product" />
+
+    <TextView
+        style="@style/MealTable.Header"
+        android:text="@string/proteins" />
+
+    <TextView
+        style="@style/MealTable.Header"
+        android:text="@string/fats" />
+
+    <TextView
+        style="@style/MealTable.Header"
+        android:text="@string/carbs" />
+
+    <TextView
+        style="@style/MealTable.Header"
+        android:text="@string/weight_g" />
+
+    <TextView
+        style="@style/MealTable.Header"
+        android:text="@string/calories" />
+</LinearLayout>

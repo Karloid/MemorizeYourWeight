@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/margin_large"
+    android:paddingRight="@dimen/margin_large"
+    android:background="?attr/selectableItemBackground">
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="@dimen/meal_height"
+        tools:ignore="Suspicious0dp" />
+
+    <TextView
+        android:id="@+id/product"
+        style="@style/MealsTable.Meal"
+        android:gravity="left"
+        tools:text="Dinner" />
+
+    <TextView
+        android:id="@+id/proteins"
+        style="@style/MealsTable.Meal"
+        android:gravity="center"
+        tools:text="22" />
+
+    <TextView
+        android:id="@+id/fats"
+        style="@style/MealsTable.Meal"
+        android:gravity="center"
+        tools:text="66" />
+
+    <TextView
+        android:id="@+id/carbs"
+        style="@style/MealsTable.Meal"
+        android:gravity="center"
+        tools:text="44" />
+
+    <TextView
+        android:id="@+id/weight"
+        style="@style/MealsTable.Meal"
+        android:gravity="center"
+        tools:text="40" />
+
+    <TextView
+        android:id="@+id/calories"
+        style="@style/MealsTable.Meal"
+        android:gravity="center"
+        tools:text="233/222" />
+</LinearLayout>
