@@ -1,13 +1,14 @@
 package com.krld.diet.base.helpers;
 
 import com.krld.diet.base.fragments.BaseFragment;
+import com.krld.diet.meals.fragments.MealsListFragment;
 import com.krld.diet.profile.fragments.ProfileFragment;
 
 import rx.functions.Func0;
 
 public enum NavigationDrawerFragments {
     PROFILE(ProfileFragment::newInstance),
-    DIET(ProfileFragment::newInstance),
+    DIET(MealsListFragment::newInstance),
     MEMORIZE(ProfileFragment::newInstance);
 
 

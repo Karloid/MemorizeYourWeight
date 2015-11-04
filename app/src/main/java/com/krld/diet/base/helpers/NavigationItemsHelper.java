@@ -17,7 +17,7 @@ public class NavigationItemsHelper {
 
         items.add(new NavigationMenuItem(NavigationMenuItem.Type.TYPE_HEADER, null, 0, () -> callback.show(NavigationDrawerFragments.PROFILE, true)));
         items.add(new NavigationMenuItem(NavigationMenuItem.Type.TYPE_ITEM, context.getString(R.string.profile), R.drawable.ic_person_black_24dp, () -> callback.show(NavigationDrawerFragments.PROFILE, true)));
-        items.add(new NavigationMenuItem(NavigationMenuItem.Type.TYPE_ITEM, context.getString(R.string.diet), R.drawable.ic_list_black_24dp, () -> callback.show(NavigationDrawerFragments.PROFILE, true)));
+        items.add(new NavigationMenuItem(NavigationMenuItem.Type.TYPE_ITEM, context.getString(R.string.diet), R.drawable.ic_list_black_24dp, () -> callback.show(NavigationDrawerFragments.DIET, true)));
         items.add(new NavigationMenuItem(NavigationMenuItem.Type.TYPE_SEPARATOR));
         items.add(new NavigationMenuItem(NavigationMenuItem.Type.TYPE_ITEM, context.getString(R.string.memorize), R.drawable.ic_save_black_24dp, () -> callback.show(NavigationDrawerFragments.PROFILE, true)));
         return items;
