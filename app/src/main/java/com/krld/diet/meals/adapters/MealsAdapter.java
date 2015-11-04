@@ -86,7 +86,23 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
         }
     }
 
-    private static class FooterViewHolder extends AbstractViewHolder {
+    protected static class FooterViewHolder extends AbstractViewHolder {
+
+        @Bind(R.id.totals)
+        TextView totalsView;
+
+        @Bind(R.id.proteins)
+        TextView proteinsView;
+
+        @Bind(R.id.fats)
+        TextView fatsView;
+
+        @Bind(R.id.carbs)
+        TextView carbsView;
+
+        @Bind(R.id.calories)
+        TextView caloriesView;
+
         public FooterViewHolder(View itemView, MealsAdapter adapter) {
             super(itemView, adapter);
         }
