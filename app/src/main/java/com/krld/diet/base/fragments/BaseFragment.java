@@ -122,7 +122,7 @@ public abstract class BaseFragment extends DialogFragment {
 
         compositeSubscriptionCreated.unsubscribe();
         compositeSubscriptionCreated = null;
-       // Application.getInstance().getMainRequestQueue().cancelAll(this);
+        // Application.getInstance().getMainRequestQueue().cancelAll(this);
     }
 
     public void hideSoftKeyboard() {
