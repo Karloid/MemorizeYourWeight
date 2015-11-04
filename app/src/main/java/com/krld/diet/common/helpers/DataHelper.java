@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.krld.diet.Application;
 import com.krld.diet.R;
 import com.krld.diet.common.models.DataStore;
+import com.krld.diet.common.models.Product;
 import com.krld.diet.common.models.Profile;
 
 import rx.subjects.BehaviorSubject;
@@ -75,5 +76,12 @@ public class DataHelper {
 
     public BehaviorSubject<DataStore> getUpdatedProfileObs() {
         return updatedProfileObs;
+    }
+
+    public Product createNewProduct() {
+        //TODO save to datastore
+        Product product = Product.create();
+
+        return product;
     }
 }

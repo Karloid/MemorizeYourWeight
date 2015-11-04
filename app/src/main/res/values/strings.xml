@@ -58,4 +58,5 @@
     <string name="add_new_product">+ Add New Product</string>
     <string name="weight_g">Weight(g)</string>
     <string name="product">Product</string>
+    <string name="new_product_default_name">New Product</string>
 </resources>

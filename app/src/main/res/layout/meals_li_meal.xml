@@ -16,31 +16,31 @@
 
     <TextView
         android:id="@+id/meal"
-        style="@style/MealsTable.Meal"
+        style="@style/Table.TextView"
         android:gravity="left"
         tools:text="Dinner" />
 
     <TextView
         android:id="@+id/proteins"
-        style="@style/MealsTable.Meal"
+        style="@style/Table.TextView"
         android:gravity="center"
         tools:text="1110/2222" />
 
     <TextView
         android:id="@+id/fats"
-        style="@style/MealsTable.Meal"
+        style="@style/Table.TextView"
         android:gravity="center"
         tools:text="1110/222" />
 
     <TextView
         android:id="@+id/carbs"
-        style="@style/MealsTable.Meal"
+        style="@style/Table.TextView"
         android:gravity="center"
         tools:text="2233/222" />
 
     <TextView
         android:id="@+id/calories"
-        style="@style/MealsTable.Meal"
+        style="@style/Table.TextView"
         android:gravity="center"
         tools:text="233/222" />
 </LinearLayout>

@@ -59,4 +59,5 @@
     <string name="add_new_product">+ Добавить новый продукт</string>
     <string name="weight_g">Вес(г)</string>
     <string name="product">Продукт</string>
+    <string name="new_product_default_name">New Product</string>
 </resources>

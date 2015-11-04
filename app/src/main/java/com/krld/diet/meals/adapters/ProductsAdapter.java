@@ -4,16 +4,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.krld.diet.R;
 import com.krld.diet.base.fragments.BaseFragment;
-import com.krld.diet.common.models.Meal;
+import com.krld.diet.common.helpers.DataHelper;
 import com.krld.diet.common.models.Product;
 import com.krld.diet.meals.fragments.MealFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import rx.functions.Func2;
 
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.AbstractViewHolder> {
@@ -40,7 +44,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
 
     @Override
     public void onBindViewHolder(AbstractViewHolder holder, int position) {
-        holder.onBind(items.get(position), position);
+        holder.onBind(items.get(position));
     }
 
     @Override
@@ -53,22 +57,77 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
         return items.get(position).type.id;
     }
 
+    private void createNewProduct(ListItem listItem) {
+        int newProductIndex = items.indexOf(listItem);
+        items.add(newProductIndex, new ListItem(Type.DIVIDER));
+        items.add(newProductIndex, new ListItem(Type.PRODUCT, DataHelper.getInstance().createNewProduct()));
+        notifyItemRangeInserted(newProductIndex, 2);
+    }
+
     public BaseFragment getFragment() {
         return fragment;
     }
 
     public static class AbstractViewHolder extends RecyclerView.ViewHolder {
-        private ListItem listItem;
-        private int position;
+
+        protected ListItem listItem;
 
         public AbstractViewHolder(View itemView, ProductsAdapter adapter) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
         }
 
-        public void onBind(ListItem listItem, int position) {
+        public void onBind(ListItem listItem) {
             this.listItem = listItem;
-            this.position = position;
         }
+
+    }
+
+    public static class ProductViewHolder extends AbstractViewHolder {
+
+        @Bind(R.id.product)
+        EditText productView;
+
+        @Bind(R.id.proteins)
+        EditText proteinsView;
+
+        @Bind(R.id.fats)
+        EditText fatsView;
+
+        @Bind(R.id.carbs)
+        EditText carbsView;
+
+        @Bind(R.id.weight)
+        EditText weightView;
+
+        @Bind(R.id.calories)
+        TextView caloriesView;
+
+        public ProductViewHolder(View itemView, ProductsAdapter adapter) {
+            super(itemView, adapter);
+        }
+
+        @Override
+        public void onBind(ListItem listItem) {
+            super.onBind(listItem);
+
+            productView.setText(listItem.product.name);
+        }
+    }
+
+    private static class AddNewProductViewHolder extends AbstractViewHolder {
+        public AddNewProductViewHolder(View itemView, ProductsAdapter adapter) {
+            super(itemView, adapter);
+            itemView.setOnClickListener(v -> adapter.createNewProduct(listItem));
+        }
+
+    }
+
+    private static class FooterViewHolder extends AbstractViewHolder {
+        public FooterViewHolder(View itemView, ProductsAdapter adapter) {
+            super(itemView, adapter);
+        }
+        //TODO
     }
 
 
@@ -90,9 +149,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
 
     private enum Type {
         HEADER(R.layout.meal_li_header, AbstractViewHolder::new),
-        PRODUCT(R.layout.meal_li_product, AbstractViewHolder::new),
-        ADD_NEW_PRODUCT(R.layout.meal_li_new_product, AbstractViewHolder::new),
-        FOOTER(R.layout.meal_li_footer, AbstractViewHolder::new),
+        PRODUCT(R.layout.meal_li_product, ProductViewHolder::new),
+        ADD_NEW_PRODUCT(R.layout.meal_li_new_product, AddNewProductViewHolder::new),
+        FOOTER(R.layout.meal_li_footer, FooterViewHolder::new),
         DIVIDER(R.layout.meals_li_divider, AbstractViewHolder::new),;
 
         public Func2<View, ProductsAdapter, AbstractViewHolder> createVH;

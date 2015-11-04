@@ -14,39 +14,36 @@
         android:layout_height="@dimen/meal_height"
         tools:ignore="Suspicious0dp" />
 
-    <TextView
+    <EditText
         android:id="@+id/product"
-        style="@style/MealsTable.Meal"
-        android:gravity="left"
-        tools:text="Dinner" />
+        style="@style/Table.TextView.EditText"
+        android:gravity="left|center_vertical"
+        android:inputType="text"
+        tools:text="Dinner"
+       />
 
-    <TextView
+    <EditText
         android:id="@+id/proteins"
-        style="@style/MealsTable.Meal"
-        android:gravity="center"
+        style="@style/Table.TextView.EditText"
         tools:text="22" />
 
-    <TextView
+    <EditText
         android:id="@+id/fats"
-        style="@style/MealsTable.Meal"
-        android:gravity="center"
+        style="@style/Table.TextView.EditText"
         tools:text="66" />
 
-    <TextView
+    <EditText
         android:id="@+id/carbs"
-        style="@style/MealsTable.Meal"
-        android:gravity="center"
+        style="@style/Table.TextView.EditText"
         tools:text="44" />
 
-    <TextView
+    <EditText
         android:id="@+id/weight"
-        style="@style/MealsTable.Meal"
-        android:gravity="center"
+        style="@style/Table.TextView.EditText"
         tools:text="40" />
 
     <TextView
         android:id="@+id/calories"
-        style="@style/MealsTable.Meal"
-        android:gravity="center"
+        style="@style/Table.TextView"
         tools:text="233/222" />
 </LinearLayout>

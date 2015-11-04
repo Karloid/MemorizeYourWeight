@@ -22,7 +22,7 @@
         <item name="android:layout">@layout/profile_li_spinner</item>
     </style>
 
-    <style name="MealsTable.Meal" parent="TextAppearance.Default.Regular.XXSmall">
+    <style name="Table.TextView" parent="TextAppearance.Default.Regular.XXSmall">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
@@ -35,6 +35,14 @@
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/text_dim</item>
+    </style>
+
+    <style name="Table.TextView.EditText">
+        <item name="android:background">@color/transparent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:inputType">number|numberDecimal|numberSigned</item>
+        <item name="android:imeOptions">flagNoExtractUi</item>
     </style>
 
 </resources>
