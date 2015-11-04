@@ -45,4 +45,9 @@
     <string name="lifestyle">Lifestyle</string>
     <string name="bmi">BMI</string>
     <string name="meals">Meals</string>
+    <string name="meal">Meal</string>
+    <string name="proteins">Proteins</string>
+    <string name="fats">Fats</string>
+    <string name="carbs">Carbs</string>
+    <string name="calories">Calories</string>
 </resources>

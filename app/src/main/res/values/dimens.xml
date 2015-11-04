@@ -53,5 +53,6 @@
 
     <dimen name="people_card_vert_margin">0dp</dimen>
     <dimen name="people_card_horiz_margin">1dp</dimen>
+    <dimen name="header_height">56dp</dimen>
 
 </resources>

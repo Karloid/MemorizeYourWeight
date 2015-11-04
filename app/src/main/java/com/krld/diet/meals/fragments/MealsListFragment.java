@@ -9,6 +9,7 @@ import android.view.View;
 import com.krld.diet.R;
 import com.krld.diet.base.fragments.BaseDrawerToggleToolbarFragment;
 import com.krld.diet.common.helpers.MetricsHelper;
+import com.krld.diet.meals.adapters.MealsAdapter;
 
 import butterknife.Bind;
 
@@ -38,6 +39,6 @@ public class MealsListFragment extends BaseDrawerToggleToolbarFragment {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-
+        recyclerView.setAdapter( new MealsAdapter());
     }
 }
