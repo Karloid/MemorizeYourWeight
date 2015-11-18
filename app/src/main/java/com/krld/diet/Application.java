@@ -5,10 +5,13 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 
 import com.activeandroid.ActiveAndroid;
+import com.f2prateek.rx.preferences.Preference;
+import com.f2prateek.rx.preferences.RxSharedPreferences;
 import com.krld.diet.common.helpers.FLog;
 
 import java.security.MessageDigest;
@@ -28,6 +31,7 @@ public class Application extends android.app.Application {
     private int foregroundActivitiesCount;
     private BehaviorSubject<Integer> foregroundActivitiesCountObs;
     private Subscription disconnectSubscription;
+    private RxSharedPreferences rxPrefs;
 
     @Override
     public void onCreate() {
@@ -36,6 +40,17 @@ public class Application extends android.app.Application {
         FLog.d(getClass().getSimpleName() + " onCreate");
         ActiveAndroid.initialize(this);
         printKeyHash();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        rxPrefs = RxSharedPreferences.create(prefs);
+        rxPrefs.getString("MEAL_TIME").asObservable().timeInterval().subscribe(s -> {
+            FLog.d(this, "mealTime1: " + s.getIntervalInMilliseconds() + " " + s.getValue());
+        });
+        rxPrefs.getString("MEAL_TIME").asObservable().timeInterval().subscribe(s -> {
+            FLog.d(this, "mealTime2: " + s.getIntervalInMilliseconds() + " " + s.getValue());
+        });
+        rxPrefs.getString("MEAL_TIME").asAction().call("new String Bzz");
+        rxPrefs.getString("MEAL_TIME").asAction().call("Rx Java Night Testing :>");
+
     }
 
     private void printKeyHash() {
