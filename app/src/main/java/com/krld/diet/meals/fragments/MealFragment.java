@@ -14,8 +14,7 @@ import com.krld.diet.base.fragments.BaseDrawerToggleToolbarFragment;
 import com.krld.diet.base.helpers.Toasts;
 import com.krld.diet.common.helpers.FLog;
 import com.krld.diet.common.helpers.MetricsHelper;
-import com.krld.diet.common.models.Meal;
-import com.krld.diet.meals.adapters.MealsAdapter;
+import com.krld.diet.common.models.MealEnumeration;
 import com.krld.diet.meals.adapters.ProductsAdapter;
 
 import butterknife.Bind;
@@ -23,7 +22,7 @@ import butterknife.Bind;
 public class MealFragment extends BaseDrawerToggleToolbarFragment {
     @Bind(R.id.meal_recycler_view)
     RecyclerView recyclerView;
-    private Meal meal;
+    private MealEnumeration meal;
 
     public static MealFragment newInstance() {
         MealFragment fragment = new MealFragment();
@@ -43,7 +42,7 @@ public class MealFragment extends BaseDrawerToggleToolbarFragment {
             Toasts.safeShowLongToast(getActivity(), R.string.label_error);
             getActivity().finish();
         }
-        meal = new Gson().fromJson(mealString, Meal.class);
+        meal = new Gson().fromJson(mealString, MealEnumeration.class);
     }
 
     @Override
@@ -60,5 +59,9 @@ public class MealFragment extends BaseDrawerToggleToolbarFragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(new ProductsAdapter(this));
+    }
+
+    public MealEnumeration getMeal() {
+        return meal;
     }
 }

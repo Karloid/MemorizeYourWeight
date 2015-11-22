@@ -8,8 +8,9 @@ import android.widget.TextView;
 
 import com.krld.diet.R;
 import com.krld.diet.base.fragments.BaseFragment;
+import com.krld.diet.common.helpers.DataHelper;
 import com.krld.diet.common.helpers.IntentHelper;
-import com.krld.diet.common.models.Meal;
+import com.krld.diet.common.models.MealEnumeration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +30,15 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
         items = new ArrayList<>();
         items.add(new ListItem(Type.HEADER));
         items.add(new ListItem(Type.DIVIDER));
-        items.add(new ListItem(Type.MEAL, Meal.BREAKFAST));
+        items.add(new ListItem(Type.MEAL, MealEnumeration.BREAKFAST));
         items.add(new ListItem(Type.DIVIDER));
-        items.add(new ListItem(Type.MEAL, Meal.TIFFIN));
+        items.add(new ListItem(Type.MEAL, MealEnumeration.TIFFIN));
         items.add(new ListItem(Type.DIVIDER));
-        items.add(new ListItem(Type.MEAL, Meal.LUNCH));
+        items.add(new ListItem(Type.MEAL, MealEnumeration.LUNCH));
         items.add(new ListItem(Type.DIVIDER));
-        items.add(new ListItem(Type.MEAL, Meal.AFTERNOON_SNACK));
+        items.add(new ListItem(Type.MEAL, MealEnumeration.AFTERNOON_SNACK));
         items.add(new ListItem(Type.DIVIDER));
-        items.add(new ListItem(Type.MEAL, Meal.DINNER));
+        items.add(new ListItem(Type.MEAL, MealEnumeration.DINNER));
         items.add(new ListItem(Type.DIVIDER));
         items.add(new ListItem(Type.FOOTER));
     }
@@ -86,13 +87,13 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
 
         public MealViewHolder(View itemView, MealsAdapter adapter) {
             super(itemView, adapter);
-            itemView.setOnClickListener(v -> IntentHelper.showMeal(adapter.getFragment().getActivity(), listItem.meal));
+            itemView.setOnClickListener(v -> IntentHelper.showMeal(adapter.getFragment().getActivity(), listItem.mealEnumeration));
         }
 
         @Override
         public void onBind(ListItem listItem, int position) {
             super.onBind(listItem, position);
-            mealView.setText(listItem.meal.nameLocResId);
+            mealView.setText(listItem.mealEnumeration.nameLocResId);
             proteinsView.setText("100/300");
             fatsView.setText("200/500");
             carbsView.setText("300/300");
@@ -119,6 +120,13 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
 
         public FooterViewHolder(View itemView, MealsAdapter adapter) {
             super(itemView, adapter);
+        }
+
+        @Override
+        public void onBind(ListItem listItem, int position) {
+            super.onBind(listItem, position);
+
+            DataHelper.getInstance().getMealSummary();
         }
     }
 
@@ -147,17 +155,17 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
 
     private class ListItem {
         private Type type;
-        private Meal meal;
+        private MealEnumeration mealEnumeration;
 
         public ListItem(Type type) {
 
             this.type = type;
         }
 
-        public ListItem(Type type, Meal meal) {
+        public ListItem(Type type, MealEnumeration mealEnumeration) {
 
             this.type = type;
-            this.meal = meal;
+            this.mealEnumeration = mealEnumeration;
         }
     }
 

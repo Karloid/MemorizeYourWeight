@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.krld.diet.R;
 import com.krld.diet.base.fragments.BaseFragment;
 import com.krld.diet.common.helpers.DataHelper;
+import com.krld.diet.common.models.MealEnumeration;
 import com.krld.diet.common.models.Product;
 import com.krld.diet.meals.fragments.MealFragment;
 
@@ -22,14 +23,20 @@ import rx.functions.Func2;
 
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.AbstractViewHolder> {
     private final MealFragment fragment;
+    private final ListItem addNewProductListItem;
     private List<ListItem> items;
 
     public ProductsAdapter(MealFragment mealFragment) {
         fragment = mealFragment;
         items = new ArrayList<>();
+        MealEnumeration mealEnumeration = fragment.getMeal();
+        DataHelper.getInstance().getMeal(mealEnumeration);
+
+        addNewProductListItem = new ListItem(Type.ADD_NEW_PRODUCT);
+
         items.add(new ListItem(Type.HEADER));
         items.add(new ListItem(Type.DIVIDER));
-        items.add(new ListItem(Type.ADD_NEW_PRODUCT));
+        items.add(addNewProductListItem);
         items.add(new ListItem(Type.DIVIDER));
         items.add(new ListItem(Type.FOOTER));
     }

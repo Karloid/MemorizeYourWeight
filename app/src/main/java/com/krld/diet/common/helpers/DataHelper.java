@@ -7,17 +7,18 @@ import com.f2prateek.rx.preferences.Preference;
 import com.f2prateek.rx.preferences.RxSharedPreferences;
 import com.google.gson.Gson;
 import com.krld.diet.Application;
+import com.krld.diet.common.models.MealEnumeration;
+import com.krld.diet.common.models.MealModel;
 import com.krld.diet.common.models.Product;
 import com.krld.diet.common.models.Profile;
 
 import rx.Observable;
-import rx.subjects.BehaviorSubject;
 
 
 public class DataHelper {
     private static DataHelper instance;
     private final RxSharedPreferences rxPrefs;
-    private String currentUser = "PROFILE_" + 1;
+    private String profileKey = "PROFILE_" + 1;
 
     public synchronized static DataHelper getInstance() {
         if (instance == null) {
@@ -37,10 +38,10 @@ public class DataHelper {
 
     @NonNull
     private Preference<String> getProfilePref() {
-        return rxPrefs.getString(currentUser);
+        return rxPrefs.getString(profileKey);
     }
 
-    private Profile convertFromJson(String s, Class<Profile> klass) {
+    private <T> T convertFromJson(String s, Class<T> klass) {
         return new Gson().fromJson(s, klass);
     }
 
@@ -58,5 +59,15 @@ public class DataHelper {
         Product product = Product.create();
 
         return product;
+    }
+
+    public Object getMealSummary() {
+        return null; //TODO
+    }
+
+    public Observable<MealModel> getMeal(MealEnumeration mealEnumeration) {
+        return rxPrefs.getString(profileKey + mealEnumeration.name())
+                .asObservable()
+                .map(s -> TextUtils.isEmpty(s) ? MealModel.create() : convertFromJson(s, MealModel.class));
     }
 }
