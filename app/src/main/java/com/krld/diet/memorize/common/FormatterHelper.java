@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class FormatterHelper {
 
@@ -15,5 +16,9 @@ public class FormatterHelper {
 
     public static String formatDate(Date date) {
         return new SimpleDateFormat("dd.MM.yyyy H:mm").format(date);
+    }
+
+    public static String formatAmount(float value) {
+        return String.format(Locale.US, "%.1f", value);
     }
 }

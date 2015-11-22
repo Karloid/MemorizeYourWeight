@@ -8,6 +8,13 @@ public class Product {
     public int id;
     public MealEnumeration mealEnumeration;
 
+
+    public float proteins;
+    public float fats;
+    public float carbs;
+    public float weight;
+    public float calories;
+
     public static Product create(MealEnumeration mealEnumeration) {
         Product product = new Product();
         product.mealEnumeration = mealEnumeration;

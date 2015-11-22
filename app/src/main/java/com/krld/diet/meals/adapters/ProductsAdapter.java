@@ -1,7 +1,6 @@
 package com.krld.diet.meals.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +8,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding.widget.RxTextView;
 import com.krld.diet.R;
 import com.krld.diet.base.fragments.BaseFragment;
 import com.krld.diet.common.helpers.DataHelper;
@@ -29,6 +29,7 @@ import rx.Subscription;
 import rx.functions.Func2;
 import rx.subscriptions.CompositeSubscription;
 
+import static com.krld.diet.memorize.common.FormatterHelper.*;
 import static rx.android.schedulers.AndroidSchedulers.*;
 
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.AbstractViewHolder> {
@@ -55,15 +56,24 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
         items.add(new ListItem(Type.DIVIDER));
         items.add(new ListItem(Type.FOOTER));
 
+        long startTs = System.currentTimeMillis();
+        RecyclerView.ItemAnimator itemAnimator = fragment.getRecyclerView().getItemAnimator();
+        fragment.getRecyclerView().setItemAnimator(null);
+
         compositeSubscription.add(dataHelper.getMealObs(mealEnumeration)
                 .observeOn(mainThread())
                 .flatMap(m -> Observable.from(m.products))
                 .distinct()
+                .timestamp()
                 .subscribe(id -> {
                     int index = items.indexOf(addNewProductListItem);
                     items.add(index, new ListItem(Type.DIVIDER));
-                    items.add(index, new ListItem(Type.PRODUCT, id));
+                    items.add(index, new ListItem(Type.PRODUCT, id.getValue()));
                     notifyItemRangeInserted(index, 2);
+
+                    if (id.getTimestampMillis() - startTs > 300 && fragment.getRecyclerView().getItemAnimator() == null) {
+                        fragment.getRecyclerView().setItemAnimator(itemAnimator);
+                    }
                 }));
 
         compositeSubscription.add(dataHelper.getDeletedProductsObs()
@@ -188,6 +198,27 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
             super(itemView, adapter);
 
             deleteButton.setImageDrawable(DrawableHelper.getTintedDrawable(R.drawable.ic_remove_circle_outline_black_24dp, R.color.grey_3));
+
+            adapter.compositeSubscription.add(RxTextView.afterTextChangeEvents(proteinsView)
+                            .filter(v -> product != null)
+                            .map(v -> v.editable().toString())
+                            .subscribe(v -> {
+                                try {
+                                    Float newValue = Float.parseFloat(v);
+                                    newValue = ((int) (newValue * 10)) / 10f;
+                                    if (!newValue.equals(product.proteins)) {
+                                        product.proteins = newValue;
+                                        adapter.dataHelper.saveProduct(product);
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    proteinsView.setText(formatAmount(product.proteins));
+                                }
+                            }, throwable -> {
+                                throwable.printStackTrace();
+                                FLog.e(throwable + "");
+                            })
+            );
         }
 
         @Override
@@ -202,10 +233,24 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
                     .observeOn(mainThread())
                     .subscribe(product -> {
                         this.product = product;
-                        productName.setText(product.name);
-                        //TODO
+                        setString(product.name, productName);
+                        setAmount(product.proteins, proteinsView);
+                        setAmount(product.fats, fatsView);
+                        setAmount(product.carbs, carbsView);
+                        setAmount(product.weight, weightView);
+                        setAmount(product.calories, caloriesView);
                     });
             adapter.compositeSubscription.add(subscribe);
+        }
+
+        private void setAmount(float source, TextView view) {
+            String newValue = formatAmount(source);
+            setString(newValue, view);
+        }
+
+        private void setString(String newString, TextView view) {
+            if (!view.getText().toString().equals(newString))
+                view.setText(newString);
         }
 
         @OnClick(R.id.delete_button)

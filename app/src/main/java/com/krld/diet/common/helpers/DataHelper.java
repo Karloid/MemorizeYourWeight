@@ -86,7 +86,7 @@ public class DataHelper {
         getMealPref(mealModel.mealEnumeration).asAction().call(convertToJson(mealModel));
     }
 
-    private void saveProduct(Product product) {
+    public void saveProduct(Product product) {
         getProductPref(product.id, product.mealEnumeration).asAction().call(convertToJson(product));
     }
 
