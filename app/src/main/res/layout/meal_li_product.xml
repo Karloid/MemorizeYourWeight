@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingLeft="@dimen/margin_large"
-    android:paddingRight="@dimen/margin_large"
-    android:background="?attr/selectableItemBackground">
+    android:paddingRight="@dimen/margin_small">
 
     <Space
         android:layout_width="0dp"
@@ -19,8 +19,7 @@
         style="@style/Table.TextView.EditTextNumber"
         android:gravity="left|center_vertical"
         android:inputType="text"
-        tools:text="Dinner"
-       />
+        tools:text="Dinner" />
 
     <EditText
         android:id="@+id/proteins"
@@ -45,5 +44,11 @@
     <TextView
         android:id="@+id/calories"
         style="@style/Table.TextView"
-        tools:text="233/222" />
+        tools:text="500" />
+
+    <Button
+        android:id="@+id/delete_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
+
 </LinearLayout>

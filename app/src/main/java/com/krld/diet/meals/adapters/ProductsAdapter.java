@@ -1,6 +1,7 @@
 package com.krld.diet.meals.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.krld.diet.R;
 import com.krld.diet.base.fragments.BaseFragment;
 import com.krld.diet.common.helpers.DataHelper;
+import com.krld.diet.common.helpers.FLog;
 import com.krld.diet.common.models.MealEnumeration;
 import com.krld.diet.meals.fragments.MealFragment;
 

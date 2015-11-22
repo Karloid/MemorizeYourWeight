@@ -58,10 +58,15 @@ public class MealFragment extends BaseDrawerToggleToolbarFragment {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(new ProductsAdapter(this));
+        ProductsAdapter adapter = new ProductsAdapter(this);
+        recyclerView.setAdapter(adapter);
     }
 
     public MealEnumeration getMeal() {
         return meal;
+    }
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
     }
 }
