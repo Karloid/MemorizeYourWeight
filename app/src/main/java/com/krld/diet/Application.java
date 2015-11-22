@@ -31,6 +31,11 @@ public class Application extends android.app.Application {
     private int foregroundActivitiesCount;
     private BehaviorSubject<Integer> foregroundActivitiesCountObs;
     private Subscription disconnectSubscription;
+
+    public RxSharedPreferences getRxPrefs() {
+        return rxPrefs;
+    }
+
     private RxSharedPreferences rxPrefs;
 
     @Override
@@ -42,15 +47,6 @@ public class Application extends android.app.Application {
         printKeyHash();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         rxPrefs = RxSharedPreferences.create(prefs);
-        rxPrefs.getString("MEAL_TIME").asObservable().timeInterval().subscribe(s -> {
-            FLog.d(this, "mealTime1: " + s.getIntervalInMilliseconds() + " " + s.getValue());
-        });
-        rxPrefs.getString("MEAL_TIME").asObservable().timeInterval().subscribe(s -> {
-            FLog.d(this, "mealTime2: " + s.getIntervalInMilliseconds() + " " + s.getValue());
-        });
-        rxPrefs.getString("MEAL_TIME").asAction().call("new String Bzz");
-        rxPrefs.getString("MEAL_TIME").asAction().call("Rx Java Night Testing :>");
-
     }
 
     private void printKeyHash() {

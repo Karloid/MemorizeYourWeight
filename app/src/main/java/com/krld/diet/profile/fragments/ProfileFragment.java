@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.krld.diet.R;
 import com.krld.diet.base.fragments.BaseDrawerToggleToolbarFragment;
 import com.krld.diet.common.helpers.DataHelper;
-import com.krld.diet.common.models.DataStore;
 import com.krld.diet.common.models.Profile;
 import com.krld.diet.memorize.common.FormatterHelper;
 
@@ -25,7 +24,6 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Action4;
-import rx.schedulers.Schedulers;
 
 import static rx.android.schedulers.AndroidSchedulers.*;
 import static rx.schedulers.Schedulers.*;
@@ -50,8 +48,8 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
     @Bind(R.id.bmi_stub)
     ViewStub bmiStub;
 
-    private Profile profile;
     private DataHelper dataHelper;
+    private Observable<Profile> profileObservable;
 
     public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
@@ -68,7 +66,8 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         mToolbar.setTitle(R.string.profile);
 
         dataHelper = DataHelper.getInstance();
-        profile = dataHelper.getProfile();
+        profileObservable = dataHelper.getProfile().observeOn(mainThread());
+
 
         setupGender();
         setupAge();
@@ -83,17 +82,10 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         ButterKnife.bind(vh, bmiStub.inflate());
         vh.label.setText(R.string.bmi);
 
-        Action1<Profile> bind = profile -> {
+        setUpBind(profile -> {
             vh.value.setText(FormatterHelper.formatDouble(profile.bmi));
             vh.value.setTextColor(getResources().getColor(profile.bmiCategory.color));
-        };
-        bind.call(profile);
-        compositeSubscriptionCreated.add(
-                dataHelper.getUpdatedProfileObs()
-                        .subscribeOn(io())
-                        .map(dataStore -> profile)
-                        .observeOn(mainThread())
-                        .subscribe(bind));
+        });
     }
 
     private void setupLifeStyle() {
@@ -106,15 +98,20 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_right, values);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
         vh.value.setAdapter(adapter);
+        setUpBind(profile -> {
+            vh.value.setSelection(values.indexOf(getString(profile.lifeStyle.descriptionResId)), false);
 
-        vh.value.setSelection(values.indexOf(getString(profile.lifeStyle.descriptionResId)), false);
+            vh.value.setOnItemSelectedListener(new SpinnerListener(
+                    (adapterView, view, position, aLong) -> {
+                        profile.lifeStyle = Profile.LifeStyle.values()[position];
+                        DataHelper.getInstance().save(profile);
+                    }));
+            ((View) vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());
+        });
+    }
 
-        vh.value.setOnItemSelectedListener(new SpinnerListener(
-                (adapterView, view, position, aLong) -> {
-                    profile.lifeStyle = Profile.LifeStyle.values()[position];
-                    DataHelper.getInstance().save(profile);
-                }));
-        ((View)vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());
+    private void setUpBind(Action1<Profile> action) {
+        compositeSubscriptionCreated.add(profileObservable.subscribe(action));
     }
 
     private void setupWeight() {
@@ -128,15 +125,17 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_right, values);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
         vh.value.setAdapter(adapter);
+        setUpBind(profile -> {
+            vh.value.setSelection(values.indexOf(profile.weight.toString()), false);
 
-        vh.value.setSelection(values.indexOf(profile.weight.toString()), false);
+            vh.value.setOnItemSelectedListener(new SpinnerListener(
+                    (adapterView, view, position, aLong) -> {
+                        profile.weight = Integer.valueOf(values.get(position));
+                        dataHelper.save(profile);
+                    }));
+            ((View) vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());
+        });
 
-        vh.value.setOnItemSelectedListener(new SpinnerListener(
-                (adapterView, view, position, aLong) -> {
-                    profile.weight = Integer.valueOf(values.get(position));
-                    dataHelper.save(profile);
-                }));
-        ((View)vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());
     }
 
     private void setupHeight() {
@@ -151,14 +150,17 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
         vh.value.setAdapter(adapter);
 
-        vh.value.setSelection(values.indexOf(profile.height.toString()), false);
+        setUpBind(profile -> {
+            vh.value.setSelection(values.indexOf(profile.height.toString()), false);
 
-        vh.value.setOnItemSelectedListener(new SpinnerListener(
-                (adapterView, view, position, aLong) -> {
-                    profile.height = Integer.valueOf(values.get(position));
-                    dataHelper.save(profile);
-                }));
-        ((View)vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());
+            vh.value.setOnItemSelectedListener(new SpinnerListener(
+                    (adapterView, view, position, aLong) -> {
+                        profile.height = Integer.valueOf(values.get(position));
+                        dataHelper.save(profile);
+                    }));
+            ((View) vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());
+        });
+
     }
 
     private void setupAge() {
@@ -172,19 +174,17 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_right, values);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
         vh.value.setAdapter(adapter);
-        if (profile.age == null) {
-            profile.age = 18;
-            dataHelper.save(profile);
-        }
 
-        vh.value.setSelection(values.indexOf(profile.age.toString()), false);
+        setUpBind(profile -> {
+            vh.value.setSelection(values.indexOf(profile.age.toString()), false);
 
-        vh.value.setOnItemSelectedListener(new SpinnerListener(
-                (adapterView, view, position, aLong) -> {
-                    profile.age = Integer.valueOf(values.get(position));
-                    dataHelper.save(profile);
-                }));
-        ((View)vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());
+            vh.value.setOnItemSelectedListener(new SpinnerListener(
+                    (adapterView, view, position, aLong) -> {
+                        profile.age = Integer.valueOf(values.get(position));
+                        dataHelper.save(profile);
+                    }));
+            ((View) vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());
+        });
     }
 
     private void setupGender() {
@@ -200,15 +200,20 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_right);
         vh.value.setAdapter(adapter);
 
-        vh.value.setSelection(profile.gender.equals(Profile.Gender.MAN) ? 0 : 1, false);
 
-        vh.value.setOnItemSelectedListener(new SpinnerListener(
-                (adapterView, view, position, aLong) -> {
-                    profile.gender = Profile.Gender.values()[position];
-                    DataHelper.getInstance().save(profile);
-                }));
+        setUpBind(profile -> {
+            vh.value.setSelection(profile.gender.equals(Profile.Gender.MAN) ? 0 : 1, false);
 
-        ((View)vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());
+            vh.value.setOnItemSelectedListener(new SpinnerListener(
+                    (adapterView, view, position, aLong) -> {
+                        profile.gender = Profile.Gender.values()[position];
+                        DataHelper.getInstance().save(profile);
+                    }));
+
+            ((View) vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());
+        });
+
+
     }
 
     public class SpinnerViewHolder {

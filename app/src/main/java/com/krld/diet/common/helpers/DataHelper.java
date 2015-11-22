@@ -1,31 +1,23 @@
 package com.krld.diet.common.helpers;
 
-import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
-import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.f2prateek.rx.preferences.Preference;
+import com.f2prateek.rx.preferences.RxSharedPreferences;
 import com.google.gson.Gson;
 import com.krld.diet.Application;
-import com.krld.diet.R;
-import com.krld.diet.common.models.DataStore;
 import com.krld.diet.common.models.Product;
 import com.krld.diet.common.models.Profile;
 
+import rx.Observable;
 import rx.subjects.BehaviorSubject;
 
 
 public class DataHelper {
-    public static final String KEY_DATA_STORE = "data_store";
     private static DataHelper instance;
-    private final SharedPreferences sharedPrefs;
-
-    private BehaviorSubject<DataStore> updatedProfileObs;
-
-    private DataHelper() {
-        sharedPrefs = Application.getInstance().getSharedPrefs();
-        updatedProfileObs = BehaviorSubject.create();
-    }
+    private final RxSharedPreferences rxPrefs;
+    private String currentUser = "PROFILE_" + 1;
 
     public synchronized static DataHelper getInstance() {
         if (instance == null) {
@@ -34,48 +26,31 @@ public class DataHelper {
         return instance;
     }
 
-    public synchronized Profile getProfile() {
-        Profile profile = getDataStore().profile;
-        if (profile == null) {
-            profile = Profile.create();
-            save(profile);
-            return profile;
-        }
-        if (profile.init()) {
-            save(profile);
-        }
-
-        return profile;
+    private DataHelper() {
+        rxPrefs = Application.getInstance().getRxPrefs();
     }
 
-    private synchronized DataStore getDataStore() {
-        String dataStoreString = sharedPrefs.getString(KEY_DATA_STORE, "");
-        DataStore dataStore;
-        if (TextUtils.isEmpty(dataStoreString)) {
-            dataStore = new DataStore();
-            dataStore.profile = Profile.create();
-            save(dataStore);
-        } else {
-            dataStore = new Gson().fromJson(dataStoreString, DataStore.class);
-        }
-        return dataStore;
+    public synchronized Observable<Profile> getProfile() {
+        return getProfilePref().asObservable()
+                .map(s -> TextUtils.isEmpty(s) ? Profile.create() : convertFromJson(s, Profile.class));
     }
 
-    @SuppressLint("CommitPrefEdits")
-    private synchronized void save(DataStore dataStore) {
-        sharedPrefs.edit().putString(KEY_DATA_STORE, new Gson().toJson(dataStore)).commit();
+    @NonNull
+    private Preference<String> getProfilePref() {
+        return rxPrefs.getString(currentUser);
+    }
+
+    private Profile convertFromJson(String s, Class<Profile> klass) {
+        return new Gson().fromJson(s, klass);
     }
 
     public void save(Profile profile) {
-        DataStore ds = getDataStore();
-        ds.profile = profile;
         profile.calcBMI();
-        save(ds);
-        updatedProfileObs.onNext(ds);
+        getProfilePref().asAction().call(convertToJson(profile));
     }
 
-    public BehaviorSubject<DataStore> getUpdatedProfileObs() {
-        return updatedProfileObs;
+    private String convertToJson(Object o) {
+        return new Gson().toJson(o);
     }
 
     public Product createNewProduct() {
