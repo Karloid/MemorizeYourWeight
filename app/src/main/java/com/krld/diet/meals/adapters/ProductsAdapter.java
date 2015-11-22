@@ -26,6 +26,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
 import rx.Subscription;
+import rx.functions.Action1;
+import rx.functions.Func0;
 import rx.functions.Func2;
 import rx.subscriptions.CompositeSubscription;
 
@@ -169,7 +171,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
     public static class ProductViewHolder extends AbstractViewHolder {
 
         @Bind(R.id.product)
-        EditText productName;
+        EditText nameView;
 
         @Bind(R.id.proteins)
         EditText proteinsView;
@@ -186,7 +188,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
         @Bind(R.id.calories)
         TextView caloriesView;
 
-
         @Bind(R.id.delete_button)
         ImageButton deleteButton;
 
@@ -199,20 +200,56 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
 
             deleteButton.setImageDrawable(DrawableHelper.getTintedDrawable(R.drawable.ic_remove_circle_outline_black_24dp, R.color.grey_3));
 
-            adapter.compositeSubscription.add(RxTextView.afterTextChangeEvents(proteinsView)
+            setupStringBinding(() -> nameView, () -> product.name, v -> product.name = v);
+
+            setupAmountBinding(() -> proteinsView, () -> product.proteins, v -> product.proteins = v);
+            setupAmountBinding(() -> fatsView, () -> product.fats, v -> product.fats = v);
+            setupAmountBinding(() -> carbsView, () -> product.carbs, v -> product.carbs = v);
+            setupAmountBinding(() -> weightView, () -> product.weight, v -> product.weight = v);
+        }
+
+        private void setupAmountBinding(Func0<TextView> viewGet, Func0<Float> valueGet, Action1<Float> valueSet) {
+            adapter.compositeSubscription.add(RxTextView.afterTextChangeEvents(viewGet.call())
                             .filter(v -> product != null)
+                            .doOnNext(v -> {    //remove jumping cursor effect
+                                String s = v.editable().toString();
+                                if (s.length() > 1 && s.charAt(0) == '0' && s.charAt(1) != '.') {
+                                    v.editable().delete(0, 1);
+                                }
+                            })
                             .map(v -> v.editable().toString())
                             .subscribe(v -> {
                                 try {
                                     Float newValue = Float.parseFloat(v);
                                     newValue = ((int) (newValue * 10)) / 10f;
-                                    if (!newValue.equals(product.proteins)) {
-                                        product.proteins = newValue;
+                                    if (!newValue.equals(valueGet.call())) {
+                                        valueSet.call(newValue);
                                         adapter.dataHelper.saveProduct(product);
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    proteinsView.setText(formatAmount(product.proteins));
+                                    viewGet.call().setText(formatAmount(valueGet.call()));
+                                }
+                            }, throwable -> {
+                                throwable.printStackTrace();
+                                FLog.e(throwable + "");
+                            })
+            );
+        }
+
+        private void setupStringBinding(Func0<TextView> viewGet, Func0<String> valueGet, Action1<String> valueSet) {
+            adapter.compositeSubscription.add(RxTextView.afterTextChangeEvents(viewGet.call())
+                            .filter(v -> product != null)
+                            .map(v -> v.editable().toString())
+                            .subscribe(v -> {
+                                try {
+                                    if (!v.equals(valueGet.call())) {
+                                        valueSet.call(v);
+                                        adapter.dataHelper.saveProduct(product);
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    viewGet.call().setText(valueGet.call());
                                 }
                             }, throwable -> {
                                 throwable.printStackTrace();
@@ -233,7 +270,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
                     .observeOn(mainThread())
                     .subscribe(product -> {
                         this.product = product;
-                        setString(product.name, productName);
+                        setString(product.name, nameView);
                         setAmount(product.proteins, proteinsView);
                         setAmount(product.fats, fatsView);
                         setAmount(product.carbs, carbsView);
@@ -272,7 +309,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
         private Integer productId;
 
         public ListItem(Type type) {
-
             this.type = type;
         }
 

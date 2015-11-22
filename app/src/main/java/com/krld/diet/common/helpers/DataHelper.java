@@ -87,6 +87,7 @@ public class DataHelper {
     }
 
     public void saveProduct(Product product) {
+        product.calcCalories();
         getProductPref(product.id, product.mealEnumeration).asAction().call(convertToJson(product));
     }
 

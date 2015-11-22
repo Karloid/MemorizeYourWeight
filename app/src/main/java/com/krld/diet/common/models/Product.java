@@ -32,4 +32,10 @@ public class Product {
 
         return isChanged;
     }
+
+    public void calcCalories() {
+        //TODO
+        calories = proteins * 4.1f + fats * 9.1f + carbs * 4.1f;
+        calories = calories * (weight / 100f);
+    }
 }
