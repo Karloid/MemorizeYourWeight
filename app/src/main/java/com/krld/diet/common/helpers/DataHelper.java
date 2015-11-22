@@ -13,6 +13,7 @@ import com.krld.diet.common.models.Product;
 import com.krld.diet.common.models.Profile;
 
 import rx.Observable;
+import rx.Subscription;
 
 
 public class DataHelper {
@@ -54,20 +55,44 @@ public class DataHelper {
         return new Gson().toJson(o);
     }
 
-    public Product createNewProduct() {
-        //TODO save to datastore
-        Product product = Product.create();
-
-        return product;
-    }
-
     public Object getMealSummary() {
         return null; //TODO
     }
 
-    public Observable<MealModel> getMeal(MealEnumeration mealEnumeration) {
-        return rxPrefs.getString(profileKey + mealEnumeration.name())
+    public Observable<MealModel> getMealObs(MealEnumeration mealEnumeration) {
+        return getMealPref(mealEnumeration)
                 .asObservable()
-                .map(s -> TextUtils.isEmpty(s) ? MealModel.create() : convertFromJson(s, MealModel.class));
+                .map(s -> TextUtils.isEmpty(s) ? MealModel.create(mealEnumeration) : convertFromJson(s, MealModel.class));
+    }
+
+    @NonNull
+    private Preference<String> getMealPref(MealEnumeration mealEnumeration) {
+        return rxPrefs.getString(profileKey + mealEnumeration);
+    }
+
+    public void addNewProduct(MealEnumeration mealEnumeration) {
+        getMealObs(mealEnumeration).take(1).subscribe(mealModel -> {
+            Product product = Product.create(mealEnumeration);
+            product.id = mealModel.productId++;
+            mealModel.products.add(product.id);
+            saveProduct(product);
+            saveMeal(mealModel);
+        });
+    }
+
+    private void saveMeal(MealModel mealModel) {
+        getMealPref(mealModel.mealEnumeration).asAction().call(convertToJson(mealModel));
+    }
+
+    private void saveProduct(Product product) {
+        getProductPref(product.id, product.mealEnumeration).asAction().call(convertToJson(product));
+    }
+
+    private Preference<String> getProductPref(int id, MealEnumeration mealEnumeration) {
+        return rxPrefs.getString(profileKey + mealEnumeration + id);
+    }
+
+    public Observable<Product> getProductObs(int id, MealEnumeration mealEnumeration) {
+        return getProductPref(id, mealEnumeration).asObservable().map(s -> convertFromJson(s, Product.class));
     }
 }

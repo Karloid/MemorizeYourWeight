@@ -11,7 +11,6 @@ import com.krld.diet.R;
 import com.krld.diet.base.fragments.BaseFragment;
 import com.krld.diet.common.helpers.DataHelper;
 import com.krld.diet.common.models.MealEnumeration;
-import com.krld.diet.common.models.Product;
 import com.krld.diet.meals.fragments.MealFragment;
 
 import java.util.ArrayList;
@@ -19,18 +18,28 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Observable;
+import rx.Subscription;
 import rx.functions.Func2;
+import rx.subscriptions.CompositeSubscription;
+
+import static rx.android.schedulers.AndroidSchedulers.*;
 
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.AbstractViewHolder> {
     private final MealFragment fragment;
     private final ListItem addNewProductListItem;
+    private final DataHelper dataHelper;
+    private final CompositeSubscription compositeSubscription;
     private List<ListItem> items;
+    private final MealEnumeration mealEnumeration;
 
     public ProductsAdapter(MealFragment mealFragment) {
         fragment = mealFragment;
+        compositeSubscription = fragment.getCompositeSubscriptionCreated();
         items = new ArrayList<>();
-        MealEnumeration mealEnumeration = fragment.getMeal();
-        DataHelper.getInstance().getMeal(mealEnumeration);
+        mealEnumeration = fragment.getMeal();
+        dataHelper = DataHelper.getInstance();
+        dataHelper.getMealObs(mealEnumeration);
 
         addNewProductListItem = new ListItem(Type.ADD_NEW_PRODUCT);
 
@@ -39,6 +48,17 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
         items.add(addNewProductListItem);
         items.add(new ListItem(Type.DIVIDER));
         items.add(new ListItem(Type.FOOTER));
+
+        compositeSubscription.add(dataHelper.getMealObs(mealEnumeration)
+                .observeOn(mainThread())
+                .flatMap(m -> Observable.from(m.products))
+                .distinct()
+                .subscribe(id -> {
+                    int index = items.indexOf(addNewProductListItem);
+                    items.add(index, new ListItem(Type.DIVIDER));
+                    items.add(index, new ListItem(Type.PRODUCT, id));
+                    notifyItemRangeInserted(index, 2);
+                }));
     }
 
 
@@ -66,9 +86,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
 
     private void createNewProduct(ListItem listItem) {
         int newProductIndex = items.indexOf(listItem);
-        items.add(newProductIndex, new ListItem(Type.DIVIDER));
-        items.add(newProductIndex, new ListItem(Type.PRODUCT, DataHelper.getInstance().createNewProduct()));
-        notifyItemRangeInserted(newProductIndex, 2);
+        dataHelper.addNewProduct(mealEnumeration);
     }
 
     public BaseFragment getFragment() {
@@ -77,10 +95,12 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
 
     public static class AbstractViewHolder extends RecyclerView.ViewHolder {
 
+        protected final ProductsAdapter adapter;
         protected ListItem listItem;
 
         public AbstractViewHolder(View itemView, ProductsAdapter adapter) {
             super(itemView);
+            this.adapter = adapter;
             ButterKnife.bind(this, itemView);
         }
 
@@ -93,7 +113,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
     public static class ProductViewHolder extends AbstractViewHolder {
 
         @Bind(R.id.product)
-        EditText productView;
+        EditText productName;
 
         @Bind(R.id.proteins)
         EditText proteinsView;
@@ -109,6 +129,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
 
         @Bind(R.id.calories)
         TextView caloriesView;
+        private Subscription subscribe;
 
         public ProductViewHolder(View itemView, ProductsAdapter adapter) {
             super(itemView, adapter);
@@ -118,7 +139,18 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
         public void onBind(ListItem listItem) {
             super.onBind(listItem);
 
-            productView.setText(listItem.product.name);
+            if (subscribe != null) {
+                subscribe.unsubscribe();
+            }
+            subscribe = adapter.dataHelper
+                    .getProductObs(listItem.productId, adapter.mealEnumeration)
+                    .observeOn(mainThread())
+                    .subscribe(product -> {
+                        productName.setText(product.name);
+                        //TODO
+                    });
+            adapter.compositeSubscription.add(subscribe);
+
         }
     }
 
@@ -140,17 +172,17 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
 
     private class ListItem {
         private Type type;
-        private Product product;
+        private Integer productId;
 
         public ListItem(Type type) {
 
             this.type = type;
         }
 
-        public ListItem(Type type, Product product) {
+        public ListItem(Type type, Integer productId) {
 
             this.type = type;
-            this.product = product;
+            this.productId = productId;
         }
     }
 

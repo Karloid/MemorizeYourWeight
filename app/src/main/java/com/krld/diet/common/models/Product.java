@@ -5,9 +5,12 @@ import com.krld.diet.R;
 
 public class Product {
     public String name;
+    public int id;
+    public MealEnumeration mealEnumeration;
 
-    public static Product create() {
+    public static Product create(MealEnumeration mealEnumeration) {
         Product product = new Product();
+        product.mealEnumeration = mealEnumeration;
         product.init();
         return product;
     }

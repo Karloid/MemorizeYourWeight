@@ -36,6 +36,10 @@ public abstract class BaseFragment extends DialogFragment {
     protected BehaviorSubject<Object> mOnViewCreatedObservable;
     protected CompositeSubscription compositeSubscriptionCreated;
 
+    public CompositeSubscription getCompositeSubscriptionCreated() {
+        return compositeSubscriptionCreated;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
