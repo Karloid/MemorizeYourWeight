@@ -21,12 +21,10 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Action4;
 
 import static rx.android.schedulers.AndroidSchedulers.*;
-import static rx.schedulers.Schedulers.*;
 
 public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
 
@@ -104,7 +102,7 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
             vh.value.setOnItemSelectedListener(new SpinnerListener(
                     (adapterView, view, position, aLong) -> {
                         profile.lifeStyle = Profile.LifeStyle.values()[position];
-                        DataHelper.getInstance().save(profile);
+                        DataHelper.getInstance().saveProfile(profile);
                     }));
             ((View) vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());
         });
@@ -131,7 +129,7 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
             vh.value.setOnItemSelectedListener(new SpinnerListener(
                     (adapterView, view, position, aLong) -> {
                         profile.weight = Integer.valueOf(values.get(position));
-                        dataHelper.save(profile);
+                        dataHelper.saveProfile(profile);
                     }));
             ((View) vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());
         });
@@ -156,7 +154,7 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
             vh.value.setOnItemSelectedListener(new SpinnerListener(
                     (adapterView, view, position, aLong) -> {
                         profile.height = Integer.valueOf(values.get(position));
-                        dataHelper.save(profile);
+                        dataHelper.saveProfile(profile);
                     }));
             ((View) vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());
         });
@@ -181,7 +179,7 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
             vh.value.setOnItemSelectedListener(new SpinnerListener(
                     (adapterView, view, position, aLong) -> {
                         profile.age = Integer.valueOf(values.get(position));
-                        dataHelper.save(profile);
+                        dataHelper.saveProfile(profile);
                     }));
             ((View) vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());
         });
@@ -207,7 +205,7 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
             vh.value.setOnItemSelectedListener(new SpinnerListener(
                     (adapterView, view, position, aLong) -> {
                         profile.gender = Profile.Gender.values()[position];
-                        DataHelper.getInstance().save(profile);
+                        DataHelper.getInstance().saveProfile(profile);
                     }));
 
             ((View) vh.value.getParent()).setOnClickListener(v -> vh.value.performClick());

@@ -46,9 +46,11 @@
         style="@style/Table.TextView"
         tools:text="500" />
 
-    <Button
+    <ImageButton
         android:id="@+id/delete_button"
         android:layout_width="40dp"
-        android:layout_height="40dp" />
+        android:layout_height="40dp"
+        android:src="@drawable/ic_remove_circle_outline_black_24dp"
+        android:background="?attr/selectableItemBackgroundBorderless"/>
 
 </LinearLayout>

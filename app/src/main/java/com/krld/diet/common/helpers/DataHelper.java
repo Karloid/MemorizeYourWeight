@@ -13,12 +13,13 @@ import com.krld.diet.common.models.Product;
 import com.krld.diet.common.models.Profile;
 
 import rx.Observable;
-import rx.Subscription;
+import rx.subjects.PublishSubject;
 
 
 public class DataHelper {
     private static DataHelper instance;
     private final RxSharedPreferences rxPrefs;
+    private final PublishSubject<Product> deletedProductsObs;
     private String profileKey = "PROFILE_" + 1;
 
     public synchronized static DataHelper getInstance() {
@@ -30,6 +31,7 @@ public class DataHelper {
 
     private DataHelper() {
         rxPrefs = Application.getInstance().getRxPrefs();
+        deletedProductsObs = PublishSubject.create();
     }
 
     public synchronized Observable<Profile> getProfile() {
@@ -46,7 +48,7 @@ public class DataHelper {
         return new Gson().fromJson(s, klass);
     }
 
-    public void save(Profile profile) {
+    public void saveProfile(Profile profile) {
         profile.calcBMI();
         getProfilePref().asAction().call(convertToJson(profile));
     }
@@ -94,5 +96,19 @@ public class DataHelper {
 
     public Observable<Product> getProductObs(int id, MealEnumeration mealEnumeration) {
         return getProductPref(id, mealEnumeration).asObservable().map(s -> convertFromJson(s, Product.class));
+    }
+
+    public void deleteProduct(MealEnumeration mealEnumeration, Product product) {
+        getMealObs(mealEnumeration).take(1).subscribe(mealModel -> {
+            int index = mealModel.products.indexOf(product.id);
+            if (index != -1)
+                mealModel.products.remove(index);
+            saveMeal(mealModel);
+            deletedProductsObs.onNext(product);
+        });
+    }
+
+    public Observable<Product> getDeletedProductsObs() {
+        return deletedProductsObs.asObservable();
     }
 }

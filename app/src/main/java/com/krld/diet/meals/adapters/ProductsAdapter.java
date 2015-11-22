@@ -6,13 +6,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.krld.diet.R;
 import com.krld.diet.base.fragments.BaseFragment;
 import com.krld.diet.common.helpers.DataHelper;
+import com.krld.diet.common.helpers.DrawableHelper;
 import com.krld.diet.common.helpers.FLog;
 import com.krld.diet.common.models.MealEnumeration;
+import com.krld.diet.common.models.Product;
 import com.krld.diet.meals.fragments.MealFragment;
 
 import java.util.ArrayList;
@@ -20,6 +23,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Func2;
@@ -61,6 +65,23 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
                     items.add(index, new ListItem(Type.PRODUCT, id));
                     notifyItemRangeInserted(index, 2);
                 }));
+
+        compositeSubscription.add(dataHelper.getDeletedProductsObs()
+                .filter(product -> mealEnumeration.equals(product.mealEnumeration))
+                .observeOn(mainThread())
+                .subscribe(p -> {
+                    int i = 0;
+                    for (ListItem li : items) {
+                        if (((Integer) p.id).equals(li.productId)) {
+                            items.remove(i);
+                            items.remove(i);
+
+                            notifyItemRangeRemoved(i, 2);
+                            break;
+                        }
+                        i++;
+                    }
+                }));
     }
 
 
@@ -94,6 +115,29 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
     public BaseFragment getFragment() {
         return fragment;
     }
+
+    private void deleteProduct(Product product) {
+        dataHelper.deleteProduct(mealEnumeration, product);
+    }
+
+    private static class AddNewProductViewHolder extends AbstractViewHolder {
+        public AddNewProductViewHolder(View itemView, ProductsAdapter adapter) {
+            super(itemView, adapter);
+            itemView.setOnClickListener(v -> adapter.createNewProduct(listItem));
+        }
+
+    }
+
+
+    //=============================
+    //=============================
+    //=============================
+    //=============================
+    //=============================
+    //=============================
+    //=============================
+    //=============================
+
 
     public static class AbstractViewHolder extends RecyclerView.ViewHolder {
 
@@ -131,10 +175,19 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
 
         @Bind(R.id.calories)
         TextView caloriesView;
+
+
+        @Bind(R.id.delete_button)
+        ImageButton deleteButton;
+
         private Subscription subscribe;
+
+        private Product product;
 
         public ProductViewHolder(View itemView, ProductsAdapter adapter) {
             super(itemView, adapter);
+
+            deleteButton.setImageDrawable(DrawableHelper.getTintedDrawable(R.drawable.ic_remove_circle_outline_black_24dp, R.color.grey_3));
         }
 
         @Override
@@ -148,20 +201,17 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
                     .getProductObs(listItem.productId, adapter.mealEnumeration)
                     .observeOn(mainThread())
                     .subscribe(product -> {
+                        this.product = product;
                         productName.setText(product.name);
                         //TODO
                     });
             adapter.compositeSubscription.add(subscribe);
-
-        }
-    }
-
-    private static class AddNewProductViewHolder extends AbstractViewHolder {
-        public AddNewProductViewHolder(View itemView, ProductsAdapter adapter) {
-            super(itemView, adapter);
-            itemView.setOnClickListener(v -> adapter.createNewProduct(listItem));
         }
 
+        @OnClick(R.id.delete_button)
+        void onDeleteClick() {
+            adapter.deleteProduct(product);
+        }
     }
 
     private static class FooterViewHolder extends AbstractViewHolder {
