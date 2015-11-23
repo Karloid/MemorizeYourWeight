@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.krld.diet.Application;
 import com.krld.diet.common.models.MealEnumeration;
 import com.krld.diet.common.models.MealModel;
+import com.krld.diet.common.models.MealSummary;
 import com.krld.diet.common.models.Product;
 import com.krld.diet.common.models.Profile;
 
@@ -57,8 +58,8 @@ public class DataHelper {
         return new Gson().toJson(o);
     }
 
-    public Object getMealSummary() {
-        return null; //TODO
+    public Observable<MealSummary> getMealSummaryObs(MealEnumeration mealEnumeration) {
+        return getMealSummaryPref(mealEnumeration).asObservable().map(s -> TextUtils.isEmpty(s) ? MealSummary.create(mealEnumeration) : convertFromJson(s, MealSummary.class));
     }
 
     public Observable<MealModel> getMealObs(MealEnumeration mealEnumeration) {
@@ -70,6 +71,11 @@ public class DataHelper {
     @NonNull
     private Preference<String> getMealPref(MealEnumeration mealEnumeration) {
         return rxPrefs.getString(profileKey + mealEnumeration);
+    }
+
+    @NonNull
+    private Preference<String> getMealSummaryPref(MealEnumeration mealEnumeration) {
+        return rxPrefs.getString(profileKey + mealEnumeration + "_summary_");
     }
 
     public void addNewProduct(MealEnumeration mealEnumeration) {

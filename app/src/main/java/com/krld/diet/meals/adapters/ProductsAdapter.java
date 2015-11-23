@@ -31,6 +31,7 @@ import rx.functions.Func0;
 import rx.functions.Func2;
 import rx.subscriptions.CompositeSubscription;
 
+import static com.krld.diet.common.helpers.ViewHelper.*;
 import static com.krld.diet.memorize.common.FormatterHelper.*;
 import static rx.android.schedulers.AndroidSchedulers.*;
 
@@ -231,7 +232,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    viewGet.call().setText(formatAmount(valueGet.call()));
+                                    viewGet.call().setText(formatAmount(valueGet.call(), 1));
                                 }
                             }, throwable -> {
                                 throwable.printStackTrace();
@@ -283,27 +284,50 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
             adapter.compositeSubscription.add(subscribe);
         }
 
-        private void setAmount(float source, TextView view) {
-            String newValue = formatAmount(source);
-            setString(newValue, view);
-        }
-
-        private void setString(String newString, TextView view) {
-            if (!view.getText().toString().equals(newString))
-                view.setText(newString);
-        }
-
         @OnClick(R.id.delete_button)
         void onDeleteClick() {
             adapter.deleteProduct(product);
         }
     }
 
-    private static class FooterViewHolder extends AbstractViewHolder {
+    public static class FooterViewHolder extends AbstractViewHolder {
+
+        @Bind(R.id.proteins)
+        TextView proteinsView;
+
+        @Bind(R.id.fats)
+        TextView fatsView;
+
+        @Bind(R.id.carbs)
+        TextView carbsView;
+
+        @Bind(R.id.weight)
+        TextView weightView;
+
+        @Bind(R.id.calories)
+        TextView caloriesView;
+
         public FooterViewHolder(View itemView, ProductsAdapter adapter) {
             super(itemView, adapter);
+
+            adapter.compositeSubscription.add(
+                    adapter.dataHelper
+                            .getMealSummaryObs(adapter.mealEnumeration)
+                            .observeOn(mainThread())
+                            .subscribe(mealSummary -> {
+                                setAmount(mealSummary.proteins, proteinsView, 0);
+                                setAmount(mealSummary.fats, fatsView, 0);
+                                setAmount(mealSummary.carbs, carbsView, 0);
+                                setAmount(mealSummary.weight, weightView, 0);
+                                setAmount(mealSummary.calories, caloriesView, 0);
+                            }));
+
         }
-        //TODO
+
+        @Override
+        public void onBind(ListItem listItem) {
+            super.onBind(listItem);
+        }
     }
 
 

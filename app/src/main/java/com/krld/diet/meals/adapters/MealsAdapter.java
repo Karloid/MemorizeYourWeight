@@ -125,8 +125,6 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
         @Override
         public void onBind(ListItem listItem, int position) {
             super.onBind(listItem, position);
-
-            DataHelper.getInstance().getMealSummary();
         }
     }
 

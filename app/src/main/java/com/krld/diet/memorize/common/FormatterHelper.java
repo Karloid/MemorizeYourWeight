@@ -18,7 +18,8 @@ public class FormatterHelper {
         return new SimpleDateFormat("dd.MM.yyyy H:mm").format(date);
     }
 
-    public static String formatAmount(float value) {
-        return String.format(Locale.US, "%.1f", value);
+    public static String formatAmount(float value, int decimalPlaces) {
+        String format = "%." +decimalPlaces+"f";
+        return String.format(Locale.US, format, value);
     }
 }
