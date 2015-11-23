@@ -6,7 +6,7 @@
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingLeft="@dimen/margin_large"
-    android:paddingRight="@dimen/margin_large"
+    android:paddingRight="@dimen/margin_small"
     android:background="?attr/selectableItemBackground">
 
     <Space
@@ -44,4 +44,9 @@
         style="@style/Table.TextView"
         android:gravity="center"
         tools:text="233/222" />
+
+    <Space
+        android:id="@+id/delete_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
 </LinearLayout>

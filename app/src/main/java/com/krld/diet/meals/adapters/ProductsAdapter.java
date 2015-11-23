@@ -208,13 +208,16 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
             setupAmountBinding(() -> weightView, () -> product.weight, v -> product.weight = v);
         }
 
-        private void setupAmountBinding(Func0<TextView> viewGet, Func0<Float> valueGet, Action1<Float> valueSet) {
+        private void setupAmountBinding(Func0<EditText> viewGet, Func0<Float> valueGet, Action1<Float> valueSet) {
             adapter.compositeSubscription.add(RxTextView.afterTextChangeEvents(viewGet.call())
                             .filter(v -> product != null)
                             .doOnNext(v -> {    //remove jumping cursor effect
                                 String s = v.editable().toString();
                                 if (s.length() > 1 && s.charAt(0) == '0' && s.charAt(1) != '.') {
                                     v.editable().delete(0, 1);
+                                } else if (s.length() == 1) {
+                                    v.editable().append(".0");
+                                    viewGet.call().setSelection(1);
                                 }
                             })
                             .map(v -> v.editable().toString())
