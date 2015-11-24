@@ -19,6 +19,7 @@ import com.krld.diet.common.models.Product;
 import com.krld.diet.meals.fragments.MealFragment;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;

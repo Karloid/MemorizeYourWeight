@@ -16,4 +16,21 @@ public class MealSummary {
         summary.mealEnumeration = mealEnumeration;
         return summary;
     }
+
+    public void clear() {
+        proteins = 0;
+        fats = 0;
+        carbs = 0;
+        weight = 0;
+        calories = 0;
+    }
+
+    public void append(Product product) {
+        float koeff = product.weight / 100f;
+        proteins += product.proteins * koeff;
+        fats += product.fats * koeff;
+        carbs += product.carbs * koeff;
+        weight += product.weight;
+        calories += product.calories;
+    }
 }
