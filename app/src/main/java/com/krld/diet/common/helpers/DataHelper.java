@@ -14,25 +14,16 @@ import com.krld.diet.common.models.Product;
 import com.krld.diet.common.models.Profile;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
-import rx.Subscription;
-import rx.functions.Action1;
-import rx.functions.Func0;
 import rx.subjects.PublishSubject;
-
-import static rx.android.schedulers.AndroidSchedulers.*;
-
 
 public class DataHelper {
     private static DataHelper instance;
     private final RxSharedPreferences rxPrefs;
     private final PublishSubject<Product> deletedProductsObs;
     private String profileKey = "PROFILE_" + 1;
-    private Map<MealEnumeration, Subscription> subscriptionMap;
 
     public synchronized static DataHelper getInstance() {
         if (instance == null) {
@@ -45,51 +36,25 @@ public class DataHelper {
         rxPrefs = Application.getInstance().getRxPrefs();
         deletedProductsObs = PublishSubject.create();
 
-
         Observable.from(MealEnumeration.values())
-                .flatMap(this::getMealObs)
-                .observeOn(mainThread())
+                .flatMap(mealEnumeration -> getMealObs(mealEnumeration)
+                        .switchMap(mealModel -> Observable.from(mealModel.products)
+                                .flatMap(id -> getProductObs(id, mealModel.mealEnumeration))
+                                .map(v -> mealModel)
+                        )
+                        .debounce(50, TimeUnit.MILLISECONDS)
+                )
                 .subscribe(mealModel -> {
-                    Observable<Integer> productIds = Observable.<Integer>from(mealModel.products).cache();
-
-                    Func0<Observable<Product>> productsObs = () -> productIds
-                            .flatMap(id -> DataHelper.this.getProductObs(id, mealModel.mealEnumeration));
-
-                    Func0<Observable<Product>> productsObsTake1 = () -> productIds
-                            .flatMap(id -> DataHelper.this.getProductObs(id, mealModel.mealEnumeration).take(1));
-
-                    Subscription subscription = getSubscription(mealModel.mealEnumeration);
-                    if (subscription != null) {
-                        subscription.unsubscribe();
-                    }
-                    subscription = productsObs.call()
-                            .debounce(50, TimeUnit.MILLISECONDS)
-                            .observeOn(mainThread())
-                            .subscribe(p -> {
-                                MealSummary summary = DataHelper.this.getMealSummaryObs(mealModel.mealEnumeration).toBlocking().first();
-                                summary.clear();
-
-                                productsObsTake1.call()
-                                        .reduce(summary, (mealSummary, product) -> {
-                                            mealSummary.append(product);
-                                            return mealSummary;
-                                        })
-                                        .observeOn(mainThread())
-                                        .subscribe((s) -> {
-                                            FLog.d(this, "save Summary: " + s.mealEnumeration);
-                                            DataHelper.this.saveSummary(s);
-                                        });
-
+                    MealSummary summary = getMealSummaryObs(mealModel.mealEnumeration).toBlocking().first();
+                    summary.clear();
+                    Observable.from(mealModel.products)
+                            .flatMap(id -> getProductObs(id, mealModel.mealEnumeration).take(1))
+                            .reduce(summary, MealSummary::append)
+                            .subscribe(s -> {
+                                FLog.d(this, "save Summary: " + s.mealEnumeration);
+                                saveSummary(s);
                             });
-                    subscriptionMap.put(mealModel.mealEnumeration, subscription);
                 });
-    }
-
-    private Subscription getSubscription(MealEnumeration mealEnumeration) {
-        if (subscriptionMap == null) {
-            subscriptionMap = new HashMap<>();
-        }
-        return subscriptionMap.get(mealEnumeration);
     }
 
     private void saveSummary(MealSummary s) {

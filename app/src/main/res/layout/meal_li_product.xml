@@ -43,7 +43,7 @@
 
     <TextView
         android:id="@+id/calories"
-        style="@style/Table.TextView.EditText.Digits"
+        style="@style/Table.TextView"
         tools:text="500" />
 
     <ImageButton

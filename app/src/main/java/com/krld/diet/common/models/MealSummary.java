@@ -25,12 +25,13 @@ public class MealSummary {
         calories = 0;
     }
 
-    public void append(Product product) {
+    public MealSummary append(Product product) {
         float koeff = product.weight / 100f;
         proteins += product.proteins * koeff;
         fats += product.fats * koeff;
         carbs += product.carbs * koeff;
         weight += product.weight;
         calories += product.calories;
+        return this;
     }
 }

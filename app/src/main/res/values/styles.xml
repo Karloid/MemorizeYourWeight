@@ -27,7 +27,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:selectAllOnFocus">true</item>
+
     </style>
 
     <style name="MealTable.Header" parent="TextAppearance.Default.Regular.XXSmall">
@@ -45,6 +45,7 @@
         <item name="android:inputType">number|numberDecimal|numberSigned</item>
         <item name="android:imeOptions">flagNoExtractUi|actionNext</item>
         <item name="android:singleLine">true</item>
+        <item name="android:selectAllOnFocus">true</item>
     </style>
 
     <style name="Table.TextView.EditText.Digits">
