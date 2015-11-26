@@ -64,7 +64,7 @@ public class ProfileFragment extends BaseDrawerToggleToolbarFragment {
         mToolbar.setTitle(R.string.profile);
 
         dataHelper = DataHelper.getInstance();
-        profileObservable = dataHelper.getProfile().observeOn(mainThread());
+        profileObservable = dataHelper.getProfileObs().observeOn(mainThread());
 
 
         setupGender();

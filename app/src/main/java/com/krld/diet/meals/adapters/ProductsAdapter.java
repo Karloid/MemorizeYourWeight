@@ -1,5 +1,6 @@
 package com.krld.diet.meals.adapters;
 
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,9 @@ import com.krld.diet.common.helpers.DataHelper;
 import com.krld.diet.common.helpers.DrawableHelper;
 import com.krld.diet.common.helpers.FLog;
 import com.krld.diet.common.models.MealEnumeration;
+import com.krld.diet.common.models.MealSummary;
 import com.krld.diet.common.models.Product;
+import com.krld.diet.common.models.Profile;
 import com.krld.diet.meals.fragments.MealFragment;
 
 import java.util.ArrayList;
@@ -212,54 +215,54 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
 
         private void setupAmountBinding(Func0<EditText> viewGet, Func0<Float> valueGet, Action1<Float> valueSet) {
             adapter.compositeSubscription.add(RxTextView.afterTextChangeEvents(viewGet.call())
-                            .filter(v -> product != null)
-                            .doOnNext(v -> {    //remove jumping cursor effect
-                                String s = v.editable().toString();
-                                if (s.length() > 1 && s.charAt(0) == '0' && s.charAt(1) != '.') {
-                                    v.editable().delete(0, 1);
-                                } else if (s.length() == 1) {
-                                    v.editable().append(".0");
-                                    viewGet.call().setSelection(1);
-                                }
-                            })
-                            .map(v -> v.editable().toString())
-                            .subscribe(v -> {
-                                try {
-                                    Float newValue = Float.parseFloat(v);
-                                    newValue = ((int) (newValue * 10)) / 10f;
-                                    if (!newValue.equals(valueGet.call())) {
-                                        valueSet.call(newValue);
-                                        adapter.dataHelper.saveProduct(product);
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    viewGet.call().setText(formatAmount(valueGet.call(), 1));
-                                }
-                            }, throwable -> {
-                                throwable.printStackTrace();
-                                FLog.e(throwable + "");
-                            })
+                    .filter(v -> product != null)
+                    .doOnNext(v -> {    //remove jumping cursor effect
+                        String s = v.editable().toString();
+                        if (s.length() > 1 && s.charAt(0) == '0' && s.charAt(1) != '.') {
+                            v.editable().delete(0, 1);
+                        } else if (s.length() == 1) {
+                            v.editable().append(".0");
+                            viewGet.call().setSelection(1);
+                        }
+                    })
+                    .map(v -> v.editable().toString())
+                    .subscribe(v -> {
+                        try {
+                            Float newValue = Float.parseFloat(v);
+                            newValue = ((int) (newValue * 10)) / 10f;
+                            if (!newValue.equals(valueGet.call())) {
+                                valueSet.call(newValue);
+                                adapter.dataHelper.saveProduct(product);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            viewGet.call().setText(formatAmount(valueGet.call(), 1));
+                        }
+                    }, throwable -> {
+                        throwable.printStackTrace();
+                        FLog.e(throwable + "");
+                    })
             );
         }
 
         private void setupStringBinding(Func0<TextView> viewGet, Func0<String> valueGet, Action1<String> valueSet) {
             adapter.compositeSubscription.add(RxTextView.afterTextChangeEvents(viewGet.call())
-                            .filter(v -> product != null)
-                            .map(v -> v.editable().toString())
-                            .subscribe(v -> {
-                                try {
-                                    if (!v.equals(valueGet.call())) {
-                                        valueSet.call(v);
-                                        adapter.dataHelper.saveProduct(product);
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    viewGet.call().setText(valueGet.call());
-                                }
-                            }, throwable -> {
-                                throwable.printStackTrace();
-                                FLog.e(throwable + "");
-                            })
+                    .filter(v -> product != null)
+                    .map(v -> v.editable().toString())
+                    .subscribe(v -> {
+                        try {
+                            if (!v.equals(valueGet.call())) {
+                                valueSet.call(v);
+                                adapter.dataHelper.saveProduct(product);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            viewGet.call().setText(valueGet.call());
+                        }
+                    }, throwable -> {
+                        throwable.printStackTrace();
+                        FLog.e(throwable + "");
+                    })
             );
         }
 
@@ -312,15 +315,20 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
             super(itemView, adapter);
 
             adapter.compositeSubscription.add(
-                    adapter.dataHelper
-                            .getMealSummaryObs(adapter.mealEnumeration)
+                    rx.Observable.combineLatest(
+                            adapter.dataHelper
+                                    .getMealSummaryObs(adapter.mealEnumeration),
+                            adapter.dataHelper.getProfileObs(), Pair::new)
                             .observeOn(mainThread())
-                            .subscribe(mealSummary -> {
-                                setAmount(mealSummary.proteins, proteinsView, 0);
-                                setAmount(mealSummary.fats, fatsView, 0);
-                                setAmount(mealSummary.carbs, carbsView, 0);
-                                setAmount(mealSummary.weight, weightView, 0);
-                                setAmount(mealSummary.calories, caloriesView, 0);
+                            .subscribe(pair -> {
+                                MealSummary summary = pair.first;
+                                Profile profile = pair.second;
+                                MealEnumeration meal = adapter.mealEnumeration;
+                                setAmountWithTotal(summary.proteins, profile.getProteins(meal), proteinsView, 0);
+                                setAmountWithTotal(summary.fats, profile.getFats(meal), fatsView, 0);
+                                setAmountWithTotal(summary.carbs, profile.getCarbs(meal), carbsView, 0);
+                                setAmount(summary.weight, weightView, 0);
+                                setAmountWithTotal(summary.calories, profile.getCalories(meal), caloriesView, 0);
                             }));
 
         }

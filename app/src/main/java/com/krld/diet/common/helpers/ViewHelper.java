@@ -14,6 +14,11 @@ public class ViewHelper {
         setString(newValue, view);
     }
 
+    public static void setAmountWithTotal(float current, float total, TextView view, int decimalPlaces) {
+        String newValue = formatAmount(current, decimalPlaces) + "/" + formatAmount(total, decimalPlaces);
+        setString(newValue, view);
+    }
+
     public static void setString(String newString, TextView view) {
         if (!view.getText().toString().equals(newString))
             view.setText(newString);

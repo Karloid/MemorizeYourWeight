@@ -4,6 +4,9 @@ import com.krld.diet.Application;
 import com.krld.diet.R;
 
 public class Product {
+    public static final float CALORIES_PROTEINS = 4.1f;
+    public static final float CALORIES_FATS = 9.1f;
+    public static final float CALORIES_CARBS = 4.1f;
     public String name;
     public int id;
     public MealEnumeration mealEnumeration;
@@ -35,7 +38,7 @@ public class Product {
 
     public void calcCalories() {
         //TODO
-        calories = proteins * 4.1f + fats * 9.1f + carbs * 4.1f;
+        calories = proteins * CALORIES_PROTEINS + fats * CALORIES_FATS + carbs * CALORIES_CARBS;
         calories = calories * (weight / 100f);
     }
 }

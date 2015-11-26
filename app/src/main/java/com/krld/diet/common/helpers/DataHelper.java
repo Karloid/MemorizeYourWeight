@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
+import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 public class DataHelper {
@@ -55,13 +56,23 @@ public class DataHelper {
                                 saveSummary(s);
                             });
                 });
+
+      /*  getProfileObs()
+                .subscribeOn(Schedulers.computation())
+                .switchMap(profile ->
+                        Observable.from(MealEnumeration.values())
+                                .flatMap(mealEnumeration -> getMealSummaryObs(mealEnumeration)
+                                        .take(1))
+                                .doOnNext(mealSummary -> mealSummary.calc(profile))
+                )
+                .subscribe(this::saveSummary);*/
     }
 
     private void saveSummary(MealSummary s) {
         getMealSummaryPref(s.mealEnumeration).asAction().call(convertToJson(s));
     }
 
-    public synchronized Observable<Profile> getProfile() {
+    public synchronized Observable<Profile> getProfileObs() {
         return getProfilePref().asObservable()
                 .map(s -> TextUtils.isEmpty(s) ? Profile.create() : convertFromJson(s, Profile.class));
     }
@@ -76,7 +87,7 @@ public class DataHelper {
     }
 
     public void saveProfile(Profile profile) {
-        profile.calcBMI();
+        profile.calc();
         getProfilePref().asAction().call(convertToJson(profile));
     }
 

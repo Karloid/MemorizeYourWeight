@@ -34,4 +34,8 @@ public class MealSummary {
         calories += product.calories;
         return this;
     }
+
+    public void calc(Profile profile) {
+
+    }
 }
