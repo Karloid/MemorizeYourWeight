@@ -15,6 +15,7 @@
 
     <color name="text_default">#33353a</color>
     <color name="text_primary_blue">@color/primary</color>
+    <color name="text_yellow">#FBC02D</color>
     <color name="text_primary_light">@color/primary_light</color>
     <color name="text_secondary">#808ea3</color>
     <color name="text_white_dim">#cceeff</color>

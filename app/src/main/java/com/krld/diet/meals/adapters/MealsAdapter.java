@@ -126,6 +126,7 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
                         setAmountWithTotal(summary.fats, profile.getFats(meal), fatsView, 0);
                         setAmountWithTotal(summary.carbs, profile.getCarbs(meal), carbsView, 0);
                         setAmountWithTotal(summary.calories, profile.getCalories(meal), caloriesView, 0);
+                        nameView.setTextColor(caloriesView.getCurrentTextColor());
                     });
 
             adapter.compositeSubscription.add(subscribe);
@@ -178,7 +179,6 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
                     .subscribe(pair -> {
                         MealSummary summary = pair.first;
                         Profile profile = pair.second;
-                        MealEnumeration meal = listItem.mealEnumeration;
                         setAmountWithTotal(summary.proteins, profile.getProteins(), proteinsView, 0);
                         setAmountWithTotal(summary.fats, profile.getFats(), fatsView, 0);
                         setAmountWithTotal(summary.carbs, profile.getCarbs(), carbsView, 0);
