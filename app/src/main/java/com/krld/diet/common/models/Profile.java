@@ -112,6 +112,23 @@ public class Profile {
         return dayCalories * meal.caloriesPercent;
     }
 
+    public float getCalories() {
+        return dayCalories;
+    }
+
+    public float getProteins() {
+        return dayCalories / Product.CALORIES_PROTEINS;
+    }
+
+    public float getFats() {
+        return dayCalories / Product.CALORIES_FATS;
+    }
+
+    public float getCarbs() {
+        return dayCalories / Product.CALORIES_CARBS;
+    }
+
+
     public enum Gender {
         MAN(R.string.man),
         WOMAN(R.string.woman);

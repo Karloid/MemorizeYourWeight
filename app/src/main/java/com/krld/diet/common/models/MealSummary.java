@@ -38,4 +38,13 @@ public class MealSummary {
     public void calc(Profile profile) {
 
     }
+
+    public MealSummary append(MealSummary mealSummary) {
+        proteins += mealSummary.proteins;
+        fats += mealSummary.fats;
+        carbs += mealSummary.carbs;
+        weight += mealSummary.weight;
+        calories += mealSummary.calories;
+        return this;
+    }
 }

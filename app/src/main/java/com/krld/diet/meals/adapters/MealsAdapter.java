@@ -17,14 +17,15 @@ import com.krld.diet.common.models.Profile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Observable;
 import rx.Subscription;
 import rx.functions.Func2;
 import rx.subscriptions.CompositeSubscription;
 
-import static com.krld.diet.common.helpers.ViewHelper.setAmount;
 import static com.krld.diet.common.helpers.ViewHelper.setAmountWithTotal;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
@@ -147,6 +148,7 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
 
         @Bind(R.id.calories)
         TextView caloriesView;
+        private Subscription subscribe;
 
         public FooterViewHolder(View itemView, MealsAdapter adapter) {
             super(itemView, adapter);
@@ -155,6 +157,35 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
         @Override
         public void onBind(ListItem listItem, int position) {
             super.onBind(listItem, position);
+
+            if (subscribe != null) {
+                subscribe.unsubscribe();
+            }
+            subscribe = rx.Observable.combineLatest(
+                    Observable.from(MealEnumeration.values())
+                            .flatMap(adapter.dataHelper::getMealSummaryObs)
+                            .debounce(50, TimeUnit.MILLISECONDS)
+                            .flatMap(v ->
+                                    Observable.from(MealEnumeration.values())
+                                            .flatMap(m -> adapter.dataHelper
+                                                    .getMealSummaryObs(m).take(1))
+                                            .reduce(new MealSummary(), MealSummary::append)
+                            )
+                    ,
+                    adapter.dataHelper.getProfileObs(),
+                    Pair::new)
+                    .observeOn(mainThread())
+                    .subscribe(pair -> {
+                        MealSummary summary = pair.first;
+                        Profile profile = pair.second;
+                        MealEnumeration meal = listItem.mealEnumeration;
+                        setAmountWithTotal(summary.proteins, profile.getProteins(), proteinsView, 0);
+                        setAmountWithTotal(summary.fats, profile.getFats(), fatsView, 0);
+                        setAmountWithTotal(summary.carbs, profile.getCarbs(), carbsView, 0);
+                        setAmountWithTotal(summary.calories, profile.getCalories(), caloriesView, 0);
+                    });
+
+            adapter.compositeSubscription.add(subscribe);
         }
     }
 
