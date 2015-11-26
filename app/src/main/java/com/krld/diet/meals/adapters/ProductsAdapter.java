@@ -1,6 +1,7 @@
 package com.krld.diet.meals.adapters;
 
 import android.support.v4.util.Pair;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -134,7 +135,16 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Abstra
     }
 
     private void deleteProduct(Product product) {
-        dataHelper.deleteProduct(mealEnumeration, product);
+        fragment.hideSoftKeyboard();
+        new AlertDialog.Builder(fragment.getActivity())
+                .setTitle(R.string.delete_product)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    dataHelper.deleteProduct(mealEnumeration, product);
+                })
+                .setNegativeButton(android.R.string.cancel, (dialog1, which1) -> {
+                })
+                .show();
+
     }
 
     private static class AddNewProductViewHolder extends AbstractViewHolder {

@@ -60,4 +60,5 @@
     <string name="weight_g">Вес(г)</string>
     <string name="product">Продукт</string>
     <string name="new_product_default_name">New Product</string>
+    <string name="delete_product">Delete product</string>
 </resources>

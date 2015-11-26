@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewTreeObserver;
 
 import com.google.gson.Gson;
 import com.krld.diet.R;
@@ -14,15 +15,25 @@ import com.krld.diet.base.fragments.BaseDrawerToggleToolbarFragment;
 import com.krld.diet.base.helpers.Toasts;
 import com.krld.diet.common.helpers.FLog;
 import com.krld.diet.common.helpers.MetricsHelper;
+import com.krld.diet.common.helpers.ViewHelper;
 import com.krld.diet.common.models.MealEnumeration;
 import com.krld.diet.meals.adapters.ProductsAdapter;
 
 import butterknife.Bind;
 
 public class MealFragment extends BaseDrawerToggleToolbarFragment {
+
     @Bind(R.id.meal_recycler_view)
     RecyclerView recyclerView;
+
+    @Bind(R.id.toolbar)
+    View toolbar;
+
+    @Bind(R.id.toolbar_shadow)
+    View toolbarShadow;
+
     private MealEnumeration meal;
+    private ViewTreeObserver.OnGlobalLayoutListener keyboardListener;
 
     public static MealFragment newInstance() {
         MealFragment fragment = new MealFragment();
@@ -43,6 +54,27 @@ public class MealFragment extends BaseDrawerToggleToolbarFragment {
             getActivity().finish();
         }
         meal = new Gson().fromJson(mealString, MealEnumeration.class);
+
+        keyboardListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+            private int mPreviousHeight;
+
+            @Override
+            public void onGlobalLayout() {
+                int newHeight = getView().getHeight();
+                if (mPreviousHeight != 0) {
+                    if (mPreviousHeight > newHeight) {
+                        // Height decreased: keyboard was shown
+                        keyboardVisible(true);
+                    } else if (mPreviousHeight < newHeight) {
+                        // Height increased: keyboard was hidden
+                        keyboardVisible(false);
+                    } else {
+                        // No change
+                    }
+                }
+                mPreviousHeight = newHeight;
+            }
+        };
     }
 
     @Override
@@ -60,6 +92,30 @@ public class MealFragment extends BaseDrawerToggleToolbarFragment {
         recyclerView.setLayoutManager(layoutManager);
         ProductsAdapter adapter = new ProductsAdapter(this);
         recyclerView.setAdapter(adapter);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getView().getViewTreeObserver().addOnGlobalLayoutListener(keyboardListener);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getView().getViewTreeObserver().removeGlobalOnLayoutListener(keyboardListener);
+    }
+
+    private void keyboardVisible(boolean isVisible) {
+         if (isVisible) {
+             toolbarShadow.setVisibility(View.GONE);
+             toolbar.setVisibility(View.GONE);
+         }   else {
+             toolbarShadow.setVisibility(View.VISIBLE);
+             toolbar.setVisibility(View.VISIBLE);
+         }
     }
 
     public MealEnumeration getMeal() {

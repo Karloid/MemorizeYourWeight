@@ -39,6 +39,7 @@
     <EditText
         android:id="@+id/weight"
         style="@style/Table.TextView.EditText.Digits"
+        android:imeOptions="flagNoExtractUi|actionDone"
         tools:text="40" />
 
     <TextView
