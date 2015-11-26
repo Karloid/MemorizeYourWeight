@@ -1,5 +1,6 @@
 package com.krld.diet.meals.adapters;
 
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,22 +12,34 @@ import com.krld.diet.base.fragments.BaseFragment;
 import com.krld.diet.common.helpers.DataHelper;
 import com.krld.diet.common.helpers.IntentHelper;
 import com.krld.diet.common.models.MealEnumeration;
+import com.krld.diet.common.models.MealSummary;
+import com.krld.diet.common.models.Profile;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Subscription;
 import rx.functions.Func2;
+import rx.subscriptions.CompositeSubscription;
+
+import static com.krld.diet.common.helpers.ViewHelper.setAmount;
+import static com.krld.diet.common.helpers.ViewHelper.setAmountWithTotal;
+import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractViewHolder> {
 
+    private final CompositeSubscription compositeSubscription;
+    private final DataHelper dataHelper;
     private List<ListItem> items;
     private BaseFragment fragment;
 
     public MealsAdapter(BaseFragment fragment) {
         super();
         this.fragment = fragment;
+        compositeSubscription = fragment.getCompositeSubscriptionCreated();
+        dataHelper = DataHelper.getInstance();
         items = new ArrayList<>();
         items.add(new ListItem(Type.HEADER));
         items.add(new ListItem(Type.DIVIDER));
@@ -71,7 +84,7 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
 
     protected static class MealViewHolder extends AbstractViewHolder {
         @Bind(R.id.meal)
-        TextView mealView;
+        TextView nameView;
 
         @Bind(R.id.proteins)
         TextView proteinsView;
@@ -84,6 +97,7 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
 
         @Bind(R.id.calories)
         TextView caloriesView;
+        private Subscription subscribe;
 
         public MealViewHolder(View itemView, MealsAdapter adapter) {
             super(itemView, adapter);
@@ -93,11 +107,27 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.AbstractView
         @Override
         public void onBind(ListItem listItem, int position) {
             super.onBind(listItem, position);
-            mealView.setText(listItem.mealEnumeration.nameLocResId);
-            proteinsView.setText("100/300");
-            fatsView.setText("200/500");
-            carbsView.setText("300/300");
-            caloriesView.setText("400/300");
+
+            if (subscribe != null) {
+                subscribe.unsubscribe();
+            }
+            subscribe = rx.Observable.combineLatest(
+                    adapter.dataHelper
+                            .getMealSummaryObs(listItem.mealEnumeration),
+                    adapter.dataHelper.getProfileObs(), Pair::new)
+                    .observeOn(mainThread())
+                    .subscribe(pair -> {
+                        MealSummary summary = pair.first;
+                        Profile profile = pair.second;
+                        MealEnumeration meal = listItem.mealEnumeration;
+                        nameView.setText(listItem.mealEnumeration.nameLocResId);
+                        setAmountWithTotal(summary.proteins, profile.getProteins(meal), proteinsView, 0);
+                        setAmountWithTotal(summary.fats, profile.getFats(meal), fatsView, 0);
+                        setAmountWithTotal(summary.carbs, profile.getCarbs(meal), carbsView, 0);
+                        setAmountWithTotal(summary.calories, profile.getCalories(meal), caloriesView, 0);
+                    });
+
+            adapter.compositeSubscription.add(subscribe);
         }
     }
 

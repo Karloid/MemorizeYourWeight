@@ -56,16 +56,6 @@ public class DataHelper {
                                 saveSummary(s);
                             });
                 });
-
-      /*  getProfileObs()
-                .subscribeOn(Schedulers.computation())
-                .switchMap(profile ->
-                        Observable.from(MealEnumeration.values())
-                                .flatMap(mealEnumeration -> getMealSummaryObs(mealEnumeration)
-                                        .take(1))
-                                .doOnNext(mealSummary -> mealSummary.calc(profile))
-                )
-                .subscribe(this::saveSummary);*/
     }
 
     private void saveSummary(MealSummary s) {
